@@ -1,14 +1,15 @@
 import React, { useState } from "react";
 import "./App.css";
-import MainModel from "./model/main-model/main-model";
-import getData from "./data";
 import { createRootStore } from "./store";
+import { observer } from "mobx-react";
 
-function App() {
+
+
+
+const App = observer(() => {
   const [rootStore] = useState(() => createRootStore());
-  const [result1, setResult1] = useState<number>();
-  const [result2, setResult2] = useState<number>();
-  const [result3, setResult3] = useState<number>();
+  const [resultMiddleware, setresultMiddleware] = useState<undefined | number>();
+  const [resultMiddleware2, setresultMiddleware2] = useState<undefined | number>()
 
 
 
@@ -16,41 +17,40 @@ function App() {
     <div>
       <button
         onClick={async () => {
-          const data = await getData();
+          // const data = await getData();
 
-          const t0 = performance.now();
-          const mainModel = MainModel.fromGrpc(data);
-          const t1 = performance.now();
-          setResult1(t1 - t0);
+          try {
+          // big data
+          const t0 = performance.now()
+          await rootStore.doSomeThing();
+          const t1 = performance.now()
+          setresultMiddleware(t1 - t0)
 
-
-          const t2 = performance.now();
-          rootStore.setMainModel(mainModel);
-          const t3 = performance.now();
-          setResult2(t3 - t2);
+          // small data
+          const t2 = performance.now()
+           rootStore.doSomeThing2();
+          const t3 = performance.now()
+          setresultMiddleware2(t3 - t2)
+          } catch (err) {
+            console.log(err)
+          }
         }}
       >
-        instance MainModel
+        instance user
       </button>
-      <button
-        onClick={async () => {
-          const t4 = performance.now();
-          rootStore.setName(String(new Date().getTime()));
-          const t5 = performance.now();
-          setResult3(t5 - t4);
-        }}
-      >
-        set something in store
-      </button>
-
       <br />
       <br />
-      <div>time of instanciation : {result1 || "?"} ms</div>
-      <div>time of setting in the store : {result2 || "?"} ms</div>
-      <div>time of change a primitive value in the store : {result3 || "?"} ms</div>
+      <h4>With big data</h4>
+      <div>time of instanciation with fromGrpc without middleware : {rootStore.result1 || "?"} ms</div>
+      <div>time of instanciation with fromGrpc with middleware : {resultMiddleware || "?"} ms</div>
+      {resultMiddleware && rootStore.result1 && <div>time took by the middleware {resultMiddleware - rootStore.result1} ms</div>}
+      <br />
+      <h4>With small data</h4>
+      <div>time of instanciation with fromGrpc without middleware : {rootStore.result2 || "?"} ms</div>
+      <div>time of instanciation with fromGrpc with middleware : {resultMiddleware2 || "?"} ms</div>
+      {resultMiddleware2 && rootStore.result2 && <div>time took by the middleware {resultMiddleware2 - rootStore.result2} ms</div>}
     </div>
   );
-}
+});
 
 export default App;
-
