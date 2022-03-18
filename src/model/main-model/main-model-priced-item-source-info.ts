@@ -13,23 +13,16 @@ class MainModelPricedItemSourceInfo extends Model({
   leadDurations: prop<QuantityOriginDuration[]>(() => []),
   deliveryDurations: prop<QuantityOriginDuration[]>(() => []),
 }) {
-  static fromGrpc(mainModelPricedItemSourceInfo: any): MainModelPricedItemSourceInfo {
+  static fromGrpc(mainModelPricedItemSourceInfo: any): void {
     if (!mainModelPricedItemSourceInfo.pricedOrderItem)
       throw new Error("Can not MainModelPricedItemSourceInfo.fromGrpc with empty pricedOrderItem");
 
-    return new this({
-      pricedOrderItem: SecondModelItem.fromGrpc(mainModelPricedItemSourceInfo.pricedOrderItem),
-
-      stock: mainModelPricedItemSourceInfo.stock ? Quantity.fromGrpc(mainModelPricedItemSourceInfo.stock) : undefined,
-      priceInfo: mainModelPricedItemSourceInfo.priceInfo
-        ? MainModelPricedItemSourceInfoPriceInfo.fromGrpc(mainModelPricedItemSourceInfo.priceInfo)
-        : undefined,
-
-      leadDurations: mainModelPricedItemSourceInfo.leadDurations.map((leadDuration: any) => QuantityOriginDuration.fromGrpc(leadDuration)),
-      deliveryDurations: mainModelPricedItemSourceInfo.deliveryDurations.map((deliveryDuration: any) =>
-        QuantityOriginDuration.fromGrpc(deliveryDuration)
-      ),
-    });
+      mainModelPricedItemSourceInfo.$modelType = "Rootstore/MainModelPricedItemSourceInfo";
+    SecondModelItem.fromGrpc(mainModelPricedItemSourceInfo.pricedOrderItem);
+    if (mainModelPricedItemSourceInfo.stock) Quantity.fromGrpc(mainModelPricedItemSourceInfo.stock);
+    if (mainModelPricedItemSourceInfo.priceInfo) MainModelPricedItemSourceInfoPriceInfo.fromGrpc(mainModelPricedItemSourceInfo.priceInfo);
+    mainModelPricedItemSourceInfo.leadDurations.map((leadDuration: any) => QuantityOriginDuration.fromGrpc(leadDuration));
+    mainModelPricedItemSourceInfo.deliveryDurations.map((deliveryDuration: any) => QuantityOriginDuration.fromGrpc(deliveryDuration));
   }
 }
 

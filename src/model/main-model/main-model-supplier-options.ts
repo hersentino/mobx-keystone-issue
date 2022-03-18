@@ -15,13 +15,9 @@ class MainModelSupplierOptions extends Model({
   mode: prop<MainModelSupplierOptionsMode>(MainModelSupplierOptionsMode.UNRECOGNIZED),
   supplierIdOrName: prop<MainModelSupplierIdOrName | undefined>(undefined),
 }) {
-  static fromGrpc(mainModelSupplierOptions: any): MainModelSupplierOptions {
-    return new this({
-      supplierIdOrName: mainModelSupplierOptions.supplierIdOrName
-        ? MainModelSupplierIdOrName.fromGrpc(mainModelSupplierOptions.supplierIdOrName)
-        : undefined,
-      mode: mainModelSupplierOptions.mode as unknown as MainModelSupplierOptionsMode,
-    });
+  static fromGrpc(mainModelSupplierOptions: any): void {
+    mainModelSupplierOptions.$modelType = "Rootstore/MainModelSupplierOptions";
+    if (mainModelSupplierOptions.supplierIdOrName) MainModelSupplierIdOrName.fromGrpc(mainModelSupplierOptions.supplierIdOrName);
   }
 }
 

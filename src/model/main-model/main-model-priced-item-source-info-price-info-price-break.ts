@@ -10,12 +10,11 @@ class QuotePricedItemSourceInfoPriceInfoPriceBreak extends Model({
 }) {
   static fromGrpc(
     quotePricedItems: any
-  ): QuotePricedItemSourceInfoPriceInfoPriceBreak {
-    return new this({
-      minimumQuantity: quotePricedItems.minimumQuantity ? Quantity.fromGrpc(quotePricedItems.minimumQuantity) : undefined,
-      unitPrice: quotePricedItems.unitPrice ? Price.fromGrpc(quotePricedItems.unitPrice) : undefined,
-      multipleQuantity: quotePricedItems.multipleQuantity ? Quantity.fromGrpc(quotePricedItems.multipleQuantity) : undefined,
-    });
+  ): void {
+    quotePricedItems.$modelType = "MobxStore/Supplier/Quote/QuotePricedItemSourceInfoPriceInfoPriceBreak";
+    if (quotePricedItems.minimumQuantity) Quantity.fromGrpc(quotePricedItems.minimumQuantity);
+    if (quotePricedItems.unitPrice) Price.fromGrpc(quotePricedItems.unitPrice);
+    if (quotePricedItems.multipleQuantity) Quantity.fromGrpc(quotePricedItems.multipleQuantity);
   }
 }
 

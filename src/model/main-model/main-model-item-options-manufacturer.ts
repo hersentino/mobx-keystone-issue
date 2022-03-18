@@ -5,11 +5,8 @@ class MainModelItemOptionsManufacturer extends Model({
   manufacturer: prop<string>(),
   mpn: prop<string>(),
 }) {
-  static fromGrpc(mainModelItemOptionsManufacturer: any): MainModelItemOptionsManufacturer {
-    return new this({
-      manufacturer: mainModelItemOptionsManufacturer.manufacturer,
-      mpn: mainModelItemOptionsManufacturer.mpn
-    });
+  static fromGrpc(mainModelItemOptionsManufacturer: any): void {
+    mainModelItemOptionsManufacturer.$modelType = "Rootstore/MainModelItemOptionsManufacturer";
   }
 }
 

@@ -13,17 +13,13 @@ class MainModelPricedItem extends Model({
   unitPrice: prop<Price | undefined>(undefined),
   maxExpectedReceptionDelay: prop<Duration | undefined>(undefined),
 }) {
-  static fromGrpc(mainModelPricedItem: any): MainModelPricedItem {
-    return new this({
-      supplierId: mainModelPricedItem.supplierId,
-      originalOrderItemId: mainModelPricedItem.originalOrderItemId,
-      sources: mainModelPricedItem.sources.map((source: any) => MainModelPricedItemSourceInfo.fromGrpc(source)),
-      status: mainModelPricedItem.status as unknown as MainModelPricedItemStatus,
-      unitPrice: mainModelPricedItem.unitPrice ? Price.fromGrpc(mainModelPricedItem.unitPrice) : undefined,
-      maxExpectedReceptionDelay: mainModelPricedItem.maxExpectedReceptionDelay
-        ? Duration.fromGrpc(mainModelPricedItem.maxExpectedReceptionDelay)
-        : undefined,
-    });
+  static fromGrpc(mainModelPricedItem: any): void {
+    mainModelPricedItem.$modelType = "Rootstore/MainModelPricedItem";
+    mainModelPricedItem.sources.map((source: any) => MainModelPricedItemSourceInfo.fromGrpc(source));
+    if (mainModelPricedItem.unitPrice) Price.fromGrpc(mainModelPricedItem.unitPrice);
+    if (mainModelPricedItem.maxExpectedReceptionDelay) Duration.fromGrpc(mainModelPricedItem.maxExpectedReceptionDelay);
+    if (mainModelPricedItem.unitPrice) Price.fromGrpc(mainModelPricedItem.unitPrice);
+    if (mainModelPricedItem.maxExpectedReceptionDelay) Duration.fromGrpc(mainModelPricedItem.maxExpectedReceptionDelay);
   }
 }
 

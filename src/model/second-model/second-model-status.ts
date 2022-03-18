@@ -6,11 +6,8 @@ class SecondModelStatus extends Model({
   type: prop<SecondModelStatusType>(SecondModelStatusType.UNRECOGNIZED),
   details: prop<string>(),
 }) {
-  static fromGrpc(secondModelStatus: any): SecondModelStatus {
-    return new this({
-      details: secondModelStatus.details,
-      type: secondModelStatus.type as unknown as SecondModelStatusType,
-    });
+  static fromGrpc(secondModelStatus: any): void {
+    secondModelStatus.$modelType = "Rootstore/SecondModelStatus";
   }
 }
 

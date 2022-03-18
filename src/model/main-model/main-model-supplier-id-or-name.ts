@@ -5,11 +5,8 @@ class MainModelSupplierIdOrName extends Model({
   supplierId: prop<string | undefined>(),
   supplierName:  prop<string | undefined>(),
 }) {
-  static fromGrpc(mainModelSupplierIdOrName: any): MainModelSupplierIdOrName {
-    return new this({
-      supplierId: mainModelSupplierIdOrName.supplierId,
-      supplierName: mainModelSupplierIdOrName.supplierName
-    });
+  static fromGrpc(mainModelSupplierIdOrName: any): void {
+    mainModelSupplierIdOrName.$modelType = "Rootstore/MainModelSupplierIdOrName";
   }
 }
 

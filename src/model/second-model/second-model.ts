@@ -25,26 +25,11 @@ class SecondModel extends Model({
   updatedAt: prop<string | undefined>(),
   prices: prop<SecondeModelPrice[]>(() => []),
 }) {
-  static fromGrpc(secondModel: any): SecondModel {
-    return new this({
-      id: secondModel.id,
-      externalId: secondModel.externalId,
-      supplierId: secondModel.supplierId,
-      supplierName: secondModel.supplierName,
-      total: secondModel.total,
-      orderTracking: secondModel.orderTracking,
-      orderTrackingInternal: secondModel.orderTrackingInternal,
-      orderingInfoId: secondModel.orderingInfoId,
-      warehouse: secondModel.warehouse,
-      expiresAt: secondModel.expiresAt,
-      latestShipmentReceptionDate: secondModel.latestShipmentReceptionDate,
-      latestExpectedItemReceptionDate: secondModel.latestExpectedItemReceptionDate,
-      createdAt: secondModel.createdAt,
-      updatedAt: secondModel.updatedAt,
-      status: secondModel.status ? SecondModelStatus.fromGrpc(secondModel.status) : undefined,
-      shipments: secondModel.shipments.map((shipment: any) => SecondModelShipment.fromGrpc(shipment)),
-      prices: secondModel.prices.map((price: any) => SecondeModelPrice.fromGrpc(price)),
-      items: secondModel.items.map((item: any) => SecondModelItem.fromGrpc(item)),
+  static fromGrpc(secondModel: any): void {
+    secondModel.$modelType = "Rootstore/SecondModel";
+    if (secondModel.status !== undefined) SecondModelStatus.fromGrpc(secondModel.status);
+    secondModel.shipments.forEach((shipment:any) => {
+      SecondModelShipment.fromGrpc(shipment)
     });
   }
 }

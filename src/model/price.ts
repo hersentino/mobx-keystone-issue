@@ -8,12 +8,8 @@ class Price extends Model({
 },{
   valueType: true,
 }) {
-  static fromGrpc(quantity: any): Price {
-    return new this({
-      currency: quantity.currency,
-      price: quantity.price,
-      priceDefaultCurrency: quantity.priceDefaultCurrency,
-    });
+  static fromGrpc(price: any): void {
+    price.$modelType = "MobxStore/Common/Price/Price";
   }
 }
 

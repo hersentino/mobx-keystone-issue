@@ -7,11 +7,10 @@ class MainModelMatrix extends Model({
   headers: prop<MainModelMatrixHeaders | undefined>(),
   quotes: prop<Quote[]>(() => []),
 }) {
-  static fromGrpc(mainModelMatrix: any): MainModelMatrix {
-    return new this({
-      quotes: mainModelMatrix.quotes.map((quote: any) => Quote.fromGrpc(quote)),
-      headers: mainModelMatrix.headers ? MainModelMatrixHeaders.fromGrpc(mainModelMatrix.headers) : undefined,
-    });
+  static fromGrpc(mainModelMatrix: any): void {
+    mainModelMatrix.$modelType = "Rootstore/MainModelMatrix";
+    mainModelMatrix.quotes.map((quote: any) => Quote.fromGrpc(quote));
+    if (mainModelMatrix.headers) MainModelMatrixHeaders.fromGrpc(mainModelMatrix.headers);
   }
 }
 

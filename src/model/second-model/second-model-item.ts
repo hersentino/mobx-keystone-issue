@@ -22,25 +22,15 @@ class SecondModelItem extends Model({
   leadDurations: prop<QuantityOriginDuration[]>(() => []),
   expectedReceptionDelay: prop<Duration | undefined>(undefined),
 }) {
-  static fromGrpc(secondModelItem: any): SecondModelItem {
+  static fromGrpc(secondModelItem: any): void {
     if (!secondModelItem.quantity)
       throw new Error("Can not SecondModelItem.fromGrpc with empty quantity");
 
-    return new this({
-      id: secondModelItem.id,
-      specId: secondModelItem.specId,
-      reference: secondModelItem.reference,
-      expectedReceptionDate: secondModelItem.expectedReceptionDate,
-      url: secondModelItem.url,
-      imageUrl: secondModelItem.imageUrl,
-      manufacturer: secondModelItem.manufacturer,
-      mpn: secondModelItem.mpn,
-      quantity: Quantity.fromGrpc(secondModelItem.quantity),
-      unitPrice: secondModelItem.unitPrice ? Price.fromGrpc(secondModelItem.unitPrice) : undefined,
-      expectedReceptionDelay: secondModelItem.expectedReceptionDelay ? Duration.fromGrpc(secondModelItem.expectedReceptionDelay) : undefined,
-      leadDurations: secondModelItem.leadDurations.map((leadDuration:any) => QuantityOriginDuration.fromGrpc(leadDuration)),
-      type: secondModelItem.type as unknown as SecondModelItemType,
-    });
+    secondModelItem.$modelType = "Rootstore/SecondModelItem";
+    if (secondModelItem.quantity) Quantity.fromGrpc(secondModelItem.quantity);
+    if (secondModelItem.unitPrice) Price.fromGrpc(secondModelItem.unitPrice);
+    if (secondModelItem.expectedReceptionDelay) Duration.fromGrpc(secondModelItem.expectedReceptionDelay);
+    secondModelItem.leadDurations.forEach((leadDuration:any) => QuantityOriginDuration.fromGrpc(leadDuration));
   }
 }
 

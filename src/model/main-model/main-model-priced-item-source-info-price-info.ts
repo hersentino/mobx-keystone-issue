@@ -9,12 +9,11 @@ class MainModelPricedItemSourceInfoPriceInfo extends Model({
   multipleQuantity: prop<Quantity | undefined>(undefined),
   priceBreaks: prop<QuotePricedItemSourceInfoPriceInfoPriceBreak[]>(() => []),
 }) {
-  static fromGrpc(mainModelPricedItemSourceInfoPriceInfo: any): MainModelPricedItemSourceInfoPriceInfo {
-    return new this({
-      priceBreaks: mainModelPricedItemSourceInfoPriceInfo.priceBreaks.map((priceBreak:any) => QuotePricedItemSourceInfoPriceInfoPriceBreak.fromGrpc(priceBreak)),
-      minimumQuantity: mainModelPricedItemSourceInfoPriceInfo.minimumQuantity ? Quantity.fromGrpc(mainModelPricedItemSourceInfoPriceInfo.minimumQuantity) : undefined,
-      multipleQuantity: mainModelPricedItemSourceInfoPriceInfo.multipleQuantity ? Quantity.fromGrpc(mainModelPricedItemSourceInfoPriceInfo.multipleQuantity) : undefined,
-    });
+  static fromGrpc(mainModelPricedItemSourceInfoPriceInfo: any): void {
+    mainModelPricedItemSourceInfoPriceInfo.$modelType = "Rootstore/MainModelPricedItemSourceInfoPriceInfo";
+    mainModelPricedItemSourceInfoPriceInfo.priceBreaks.map((priceBreak:any) => QuotePricedItemSourceInfoPriceInfoPriceBreak.fromGrpc(priceBreak));
+    if (mainModelPricedItemSourceInfoPriceInfo.minimumQuantity) Quantity.fromGrpc(mainModelPricedItemSourceInfoPriceInfo.minimumQuantity);
+    if (mainModelPricedItemSourceInfoPriceInfo.multipleQuantity) Quantity.fromGrpc(mainModelPricedItemSourceInfoPriceInfo.multipleQuantity);
   }
 
 }

@@ -34,32 +34,20 @@ class MainModel extends Model({
   pricedItems: prop<MainModelPricedItem[]>(() => []),
   bestOrders: prop<SecondModel[]>(() => []),
 }) {
-  static fromGrpc(mainModel: any): MainModel {
+  static fromGrpc(mainModel: any): void {
     if (!mainModel.status)
       throw new Error("Status is empty in Quote");
 
-    return new this({
-      id: mainModel.id,
-      quantity: mainModel.quantity,
-      expiresAt: mainModel.expiresAt,
-      createdAt: mainModel.createdAt,
-      updatedAt: mainModel.updatedAt,
-      validatedAt: mainModel.validatedAt,
-      quoteMatrixId: mainModel.quoteMatrixId,
-      isQuoteMatrixReference: mainModel.isQuoteMatrixReference,
-      projectId: mainModel.projectId,
-      pricedItems: mainModel.pricedItems.map((pricedItem: any) => MainModelPricedItem.fromGrpc(pricedItem)),
-      bestOrders: mainModel.bestOrders.map((bestOrder: any) => SecondModel.fromGrpc(bestOrder)),
-      openDayDelivery: mainModel.openDayDelivery ? Duration.fromGrpc(mainModel.openDayDelivery) : undefined,
-      pricingMode: mainModel.pricingMode as unknown as PricingMode,
-      status: MainModelStatus.fromGrpc(mainModel.status),
-      items: mainModel.items.map((item:any) => MainModelItem.fromGrpc(item)),
-      quoteLines: mainModel.quoteLines.map((quoteLine:any) => MainModelLine.fromGrpc(quoteLine)),
-      totalPriceEot: mainModel.totalPriceEot ? Price.fromGrpc(mainModel.totalPriceEot) : undefined,
-      totalPriceIot: mainModel.totalPriceIot ? Price.fromGrpc(mainModel.totalPriceIot) : undefined,
-      options: mainModel.options ? MainModelOptions.fromGrpc(mainModel.options) : undefined,
-      itemErrorStatusSummary: mainModel.itemErrorStatusSummary as unknown as MainModelItemStatus,
-    });
+    mainModel.$modelType = "Rootstore/MainModel";      
+    mainModel.pricedItems.map((pricedItem: any) => MainModelPricedItem.fromGrpc(pricedItem));
+    mainModel.bestOrders.map((bestOrder: any) => SecondModel.fromGrpc(bestOrder));
+    if (mainModel.openDayDelivery) Duration.fromGrpc(mainModel.openDayDelivery);
+    if (mainModel.status) MainModelStatus.fromGrpc(mainModel.status);
+    mainModel.items.map((item: any) => MainModelItem.fromGrpc(item));
+    mainModel.quoteLines.map((quoteLine:any) => MainModelLine.fromGrpc(quoteLine));
+    if (mainModel.totalPriceEot) Price.fromGrpc(mainModel.totalPriceEot);
+    if (mainModel.totalPriceIot) Price.fromGrpc(mainModel.totalPriceIot);
+    if (mainModel.options) MainModelOptions.fromGrpc(mainModel.options);
   }
 }
 

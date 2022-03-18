@@ -9,13 +9,9 @@ class SecondeModelPrice extends Model({
   price: prop<Price | undefined>(),
   details: prop<string>(""),
 }) {
-  static fromGrpc(secondeModelPrice: any): SecondeModelPrice {
-    return new this({
-      id: secondeModelPrice.id,
-      details: secondeModelPrice.details,
-      type: secondeModelPrice.type as unknown as SecondModelPriceType,
-      price: secondeModelPrice.price ? Price.fromGrpc(secondeModelPrice.price) : undefined,
-    });
+  static fromGrpc(secondeModelPrice: any): void {
+    secondeModelPrice.$modelType = "Rootstore/SecondeModelPrice";
+    if (secondeModelPrice.price) Price.fromGrpc(secondeModelPrice.price);
   }
 }
 

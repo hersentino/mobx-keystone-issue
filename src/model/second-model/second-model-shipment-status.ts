@@ -6,11 +6,8 @@ class SecondModelShipmentStatus extends Model({
   type: prop<SecondModelShipmentStatusType>(SecondModelShipmentStatusType.UNRECOGNIZED),
   details: prop<string>(""),
 }) {
-  static fromGrpc(secondModelShipmentStatus: any): SecondModelShipmentStatus {
-    return new this({
-      type: secondModelShipmentStatus.type,
-      details: secondModelShipmentStatus.details
-    });
+  static fromGrpc(secondModelShipmentStatus: any): void {
+    secondModelShipmentStatus.$modelType = "Rootstore/SecondModelShipmentStatus";
   }
 }
 

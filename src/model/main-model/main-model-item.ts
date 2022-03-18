@@ -9,7 +9,7 @@ import MainModelItemStatus from "./main-model-item-status";
 
 @model("Rootstore/MainModelItem")
 class MainModelItem extends Model({
-  id: idProp,
+  // id: idProp,
   orderItem: prop<SecondModelItem>(() => new SecondModelItem({})),
   options: prop<MainModelItemOptions | undefined>(undefined),
   status: prop<MainModelItemStatus>(MainModelItemStatus.UNKNOWN),
@@ -19,19 +19,15 @@ class MainModelItem extends Model({
 }) {
   static fromGrpc(
     mainModelItem: any,
-  ): MainModelItem {
+  ): void {
     if (!mainModelItem.orderItem)
       throw new Error("Can not QuoteItem.fromGrpc with empty orderItem");
 
-    return new this({
-      id: mainModelItem.id,
-      hasInternalError: mainModelItem.hasInternalError,
-      additionalQuantity: mainModelItem.additionalQuantity ? Quantity.fromGrpc(mainModelItem.additionalQuantity) : undefined,
-      minOpenDaysDuration: mainModelItem.minOpenDaysDuration ? Duration.fromGrpc(mainModelItem.minOpenDaysDuration) : undefined,
-      orderItem: SecondModelItem.fromGrpc(mainModelItem.orderItem),
-      options: mainModelItem.options ? MainModelItemOptions.fromGrpc(mainModelItem.options) : undefined,
-      status: mainModelItem.status as unknown as MainModelItemStatus,
-    });
+      mainModelItem.$modelType = "Rootstore/MainModelItem";
+      if (mainModelItem.additionalQuantity) Quantity.fromGrpc(mainModelItem.additionalQuantity);
+      if (mainModelItem.minOpenDaysDuration) Duration.fromGrpc(mainModelItem.minOpenDaysDuration);
+      if (mainModelItem.orderItem) SecondModelItem.fromGrpc(mainModelItem.orderItem);
+      if (mainModelItem.options) MainModelItemOptions.fromGrpc(mainModelItem.options);
   }
 }
 

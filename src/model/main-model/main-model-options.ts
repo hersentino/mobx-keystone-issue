@@ -5,12 +5,9 @@ import MainModelOptionsItemTypeSupplierOptions from "./main-model-options-item-t
 class MainModelOptions extends Model({
   itemTypeSupplierOptions: prop<MainModelOptionsItemTypeSupplierOptions[]>(() => []),
 }) {
-  static fromGrpc(mainModelOptions: any): MainModelOptions {
-    return new this({
-      itemTypeSupplierOptions: mainModelOptions.itemTypeSupplierOptions.map((itemTypeSupplierOption: any) =>
-      MainModelOptionsItemTypeSupplierOptions.fromGrpc(itemTypeSupplierOption)
-      ),
-    });
+  static fromGrpc(mainModelOptions: any): void {
+    mainModelOptions.$modelType = "MobxStore/Supplier/Quote/MainModelOptions";
+    mainModelOptions.itemTypeSupplierOptions.map((itemTypeSupplierOption: any) => MainModelOptionsItemTypeSupplierOptions.fromGrpc(itemTypeSupplierOption));
   }
 }
 

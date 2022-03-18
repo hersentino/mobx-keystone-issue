@@ -7,13 +7,10 @@ class MainModelItemOptions extends Model({
   supplierOptions: prop<MainModelSupplierOptions[]>(() => []),
   manufacturerOptions: prop<MainModelItemOptionsManufacturer | undefined>(undefined),
 }) {
-  static fromGrpc(mainModelItemOptions: any): MainModelItemOptions {
-    return new this({
-      supplierOptions: mainModelItemOptions.supplierOptions.map((quoteItemOption:any) => MainModelSupplierOptions.fromGrpc(quoteItemOption)),
-      manufacturerOptions: mainModelItemOptions.manufacturerOptions
-        ? MainModelItemOptionsManufacturer.fromGrpc(mainModelItemOptions.manufacturerOptions)
-        : undefined,
-    });
+  static fromGrpc(mainModelItemOptions: any): void {
+    mainModelItemOptions.$modelType = "Rootstore/MainModelItemOptions";
+    mainModelItemOptions.supplierOptions.map((quoteItemOption:any) => MainModelSupplierOptions.fromGrpc(quoteItemOption));
+    if (mainModelItemOptions.manufacturerOptions) MainModelItemOptionsManufacturer.fromGrpc(mainModelItemOptions.manufacturerOptions);
   }
 
 

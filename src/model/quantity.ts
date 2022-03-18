@@ -8,11 +8,8 @@ class Quantity extends Model({
 }, {
   valueType: true,
 }) {
-  static fromGrpc(quantity: any): Quantity {
-    return new this({
-      quantity: quantity.quantity,
-      unit: quantity.unit as unknown as QuantityUnit,
-    });
+  static fromGrpc(quantity: any): void {
+    quantity.$modelType = "MobxStore/Common/Quantity/Quantity";
   }
 }
 

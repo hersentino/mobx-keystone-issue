@@ -13,16 +13,10 @@ class SecondModelShipment extends Model({
   receivedAt: prop<string | undefined>(),
   orderIds: prop<string[]>(() => []),
 }) {
-  static fromGrpc(secondModelShipment: any): SecondModelShipment {
-    return new this({
-      id: secondModelShipment.id,
-      trackingId: secondModelShipment.trackingId,
-      receivedAt: secondModelShipment.receivedAt,
-      orderIds: secondModelShipment.orderIds,
-      shipper: secondModelShipment.shipper as unknown as Shipper,
-      status: secondModelShipment.status ? SecondModelShipmentStatus.fromGrpc(secondModelShipment.status) : undefined,
-      content: secondModelShipment.content.map((c: any) => SecondModelItem.fromGrpc(c)),
-    });
+  static fromGrpc(secondModelShipment: any): void {
+    secondModelShipment.$modelType = "Rootstore/SecondModelShipment";
+    if (secondModelShipment.status) SecondModelShipmentStatus.fromGrpc(secondModelShipment.status);
+    secondModelShipment.content.forEach((c: any) => SecondModelItem.fromGrpc(c));
   }
 }
 

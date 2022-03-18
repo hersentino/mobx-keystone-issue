@@ -9,13 +9,10 @@ class MainModelOptionsItemTypeSupplierOptions extends Model({
 }) {
   static fromGrpc(
     mainModelOptionsItemTypeSupplierOptions: any
-  ): MainModelOptionsItemTypeSupplierOptions {
-    return new this({
-      supplierOptions: mainModelOptionsItemTypeSupplierOptions.supplierOptions
-        ? MainModelSupplierOptions.fromGrpc(mainModelOptionsItemTypeSupplierOptions.supplierOptions)
-        : undefined,
-      type: mainModelOptionsItemTypeSupplierOptions.type as unknown as SecondModelItemType,
-    });
+  ): void {
+
+    mainModelOptionsItemTypeSupplierOptions.$modelType = "Rootstore/MainModelOptionsItemTypeSupplierOptions";
+    if (mainModelOptionsItemTypeSupplierOptions.supplierOptions) MainModelSupplierOptions.fromGrpc(mainModelOptionsItemTypeSupplierOptions.supplierOptions);
   }
 }
 

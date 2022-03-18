@@ -9,12 +9,10 @@ class QuantityOriginDuration extends Model({
   origin: prop<string>(""),
   duration: prop<Duration | undefined>(undefined),
 }) {
-  static fromGrpc(quantityOriginDuration: any): QuantityOriginDuration {
-    return new this({
-      origin: quantityOriginDuration.origin,
-      quantity: quantityOriginDuration.quantity ? Quantity.fromGrpc(quantityOriginDuration.quantity) : undefined,
-      duration: quantityOriginDuration.duration ? Duration.fromGrpc(quantityOriginDuration.duration) : undefined,
-    });
+  static fromGrpc(quantityOriginDuration: any): void {
+    quantityOriginDuration.$modelType = "Rootstore/QuantityOriginDuration";
+    if (quantityOriginDuration.quantity) Quantity.fromGrpc(quantityOriginDuration.quantity);
+    if (quantityOriginDuration.duration) Duration.fromGrpc(quantityOriginDuration.duration);
   }
 }
 
