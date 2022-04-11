@@ -1,13 +1,17 @@
-import { idProp, model, Model, prop } from "mobx-keystone";
+import { makeAutoObservable } from "mobx";
 
-@model("MobxStore/Common/Google/Protobuf/Duration")
-class Duration extends Model({
- id: idProp,
-  seconds: prop<number>(0).withSetter(),
-  nanos: prop<number>(0).withSetter(),
-},{
-  valueType: true,
-}) {
+class Duration {
+  seconds: number = 0;
+  nanos: number = 0;
+
+  constructor(mainModel?: Duration) {
+    makeAutoObservable(this);
+    if (mainModel) {
+      this.seconds = mainModel.seconds;
+      this.nanos = mainModel.nanos;
+    }
+  }
+
   static fromGrpc(duration: any): Duration {
     return new this({
       seconds: duration.seconds,

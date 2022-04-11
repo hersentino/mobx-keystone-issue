@@ -1,11 +1,16 @@
-import { model, prop, Model } from "mobx-keystone";
+import { makeAutoObservable } from "mobx";
 import Duration from "../duration";
 
-@model("Rootstore/MainModelMatrixHeaders")
-class MainModelMatrixHeaders extends Model({
-  delays: prop<Duration[]>(() => []),
-  quantities: prop<number[]>(() => []),
-}) {
+class MainModelMatrixHeaders  {
+  delays: Duration[] = [];
+  quantities: number[] = [];
+
+  constructor(mainModel: MainModelMatrixHeaders) {
+    makeAutoObservable(this);
+    this.delays = mainModel.delays;
+    this.quantities = mainModel.quantities;
+  }
+
   static fromGrpc(mainModelMatrixHeaders: any): MainModelMatrixHeaders {
     return new this({
       quantities: mainModelMatrixHeaders.quantities,

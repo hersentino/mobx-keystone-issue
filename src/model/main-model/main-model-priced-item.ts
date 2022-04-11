@@ -1,18 +1,28 @@
-import { model, Model, prop } from "mobx-keystone";
 import MainModelPricedItemStatus from "./main-model-priced-item-status";
 import Price from "../price";
 import Duration from "../duration";
 import MainModelPricedItemSourceInfo from "./main-model-priced-item-source-info";
+import { makeAutoObservable } from "mobx";
 
-@model("Rootstore/MainModelPricedItem")
-class MainModelPricedItem extends Model({
-  supplierId: prop<string>(),
-  originalOrderItemId: prop<string>(),
-  sources: prop<MainModelPricedItemSourceInfo[]>(() => []),
-  status: prop<MainModelPricedItemStatus>(MainModelPricedItemStatus.UNKNOWN),
-  unitPrice: prop<Price | undefined>(undefined),
-  maxExpectedReceptionDelay: prop<Duration | undefined>(undefined),
-}) {
+// @model("Rootstore/MainModelPricedItem")
+class MainModelPricedItem {
+  supplierId: string = ""
+  originalOrderItemId: string = ""
+  sources: MainModelPricedItemSourceInfo[] = []
+  status: MainModelPricedItemStatus = MainModelPricedItemStatus.UNKNOWN;
+  unitPrice: Price | undefined;
+  maxExpectedReceptionDelay: Duration | undefined;
+
+  constructor(mainModel: MainModelPricedItem) {
+    makeAutoObservable(this);
+    this.maxExpectedReceptionDelay = mainModel.maxExpectedReceptionDelay;
+    this.supplierId = mainModel.supplierId;
+    this.sources = mainModel.sources;
+    this.status = mainModel.status;
+    this.originalOrderItemId = mainModel.originalOrderItemId;
+    this.unitPrice = mainModel.unitPrice;
+  }
+
   static fromGrpc(mainModelPricedItem: any): MainModelPricedItem {
     return new this({
       supplierId: mainModelPricedItem.supplierId,

@@ -1,13 +1,19 @@
-import { model, Model, prop } from "mobx-keystone";
+import { makeAutoObservable } from "mobx";
 
-@model("MobxStore/Common/Price/Price")
-class Price extends Model({
-  currency: prop<string>(""),
-  price: prop<number>(0),
-  priceDefaultCurrency: prop<number>(0),
-},{
-  valueType: true,
-}) {
+class Price {
+  currency: string = "";
+  price: number = 0;
+  priceDefaultCurrency: number = 0;
+
+  constructor(mainModel?: Price) {
+    makeAutoObservable(this);
+    if (mainModel) {
+      this.currency = mainModel.currency;
+      this.priceDefaultCurrency = mainModel.priceDefaultCurrency;
+      this.price = mainModel.price;
+    }
+  }
+
   static fromGrpc(quantity: any): Price {
     return new this({
       currency: quantity.currency,

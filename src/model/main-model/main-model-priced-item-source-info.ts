@@ -1,18 +1,26 @@
-import { model, prop, Model } from "mobx-keystone";
 
 import SecondModelItem from "../second-model/second-model-item";
 import Quantity from "../quantity";
 import QuantityOriginDuration from "../second-model/quantity-origin-duration";
 import MainModelPricedItemSourceInfoPriceInfo from "./main-model-priced-item-source-info-price-info";
+import { makeAutoObservable } from "mobx";
 
-@model("Rootstore/MainModelPricedItemSourceInfo")
-class MainModelPricedItemSourceInfo extends Model({
-  pricedOrderItem: prop<SecondModelItem>(() => new SecondModelItem({})),
-  stock: prop<Quantity | undefined>(undefined),
-  priceInfo: prop<MainModelPricedItemSourceInfoPriceInfo | undefined>(undefined),
-  leadDurations: prop<QuantityOriginDuration[]>(() => []),
-  deliveryDurations: prop<QuantityOriginDuration[]>(() => []),
-}) {
+class MainModelPricedItemSourceInfo {
+  pricedOrderItem: SecondModelItem = new SecondModelItem();
+  stock: Quantity | undefined;
+  priceInfo: MainModelPricedItemSourceInfoPriceInfo | undefined;
+  leadDurations: QuantityOriginDuration[] = [];
+  deliveryDurations: QuantityOriginDuration[] = [];
+
+  constructor(mainModel: MainModelPricedItemSourceInfo) {
+    makeAutoObservable(this);
+    this.pricedOrderItem = mainModel.pricedOrderItem;
+    this.stock = mainModel.stock;
+    this.priceInfo =  mainModel.priceInfo;
+    this.leadDurations =  mainModel.leadDurations;
+    this.deliveryDurations =  mainModel.deliveryDurations;
+  }
+
   static fromGrpc(mainModelPricedItemSourceInfo: any): MainModelPricedItemSourceInfo {
     if (!mainModelPricedItemSourceInfo.pricedOrderItem)
       throw new Error("Can not MainModelPricedItemSourceInfo.fromGrpc with empty pricedOrderItem");

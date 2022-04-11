@@ -27,7 +27,9 @@ function App() {
           const t2 = performance.now();
           rootStore.setMainModel(mainModel);
           const t3 = performance.now();
-          setResult2(t3 - t2);
+          const result = t3 - t2;
+          console.log("result", result)
+          setResult2(result);
         }}
       >
         instance MainModel
@@ -48,6 +50,8 @@ function App() {
       <div>time of instanciation : {result1 || "?"} ms</div>
       <div>time of setting in the store : {result2 || "?"} ms</div>
       <div>time of change a primitive value in the store : {result3 || "?"} ms</div>
+
+      <div>{rootStore.mainModel?.items.map((item) => {return <>{item.status}<br/></>})}</div>
     </div>
   );
 }

@@ -1,27 +1,47 @@
-import { model, prop, Model } from "mobx-keystone";
 
 import Duration from "../duration";
 import Quantity from "../quantity";
 import SecondModelItemType from "./second-model-item-type";
 import Price from "../price";
 import QuantityOriginDuration from "./quantity-origin-duration";
+import { makeAutoObservable } from "mobx";
 
-@model("Rootstore/SecondModelItem")
-class SecondModelItem extends Model({
-  id: prop<string>(""),
-  type: prop<SecondModelItemType>(SecondModelItemType.UNRECOGNIZED),
-  specId: prop<string>(""),
-  unitPrice: prop<Price | undefined>(undefined),
-  quantity: prop<Quantity>(() => new Quantity({})),
-  reference: prop<string>(""),
-  expectedReceptionDate: prop<string | undefined>(),
-  url: prop<string>(""),
-  imageUrl: prop<string>(""),
-  manufacturer: prop<string>(""),
-  mpn:prop<string>(""),
-  leadDurations: prop<QuantityOriginDuration[]>(() => []),
-  expectedReceptionDelay: prop<Duration | undefined>(undefined),
-}) {
+class SecondModelItem {
+  id: string = "";
+  type: SecondModelItemType = SecondModelItemType.UNRECOGNIZED;
+  specId: string = "";
+  unitPrice: Price | undefined;
+  quantity: Quantity = new Quantity();
+  reference: string = "";
+  expectedReceptionDate: string | undefined;
+  url: string= "";
+  imageUrl: string= "";
+  manufacturer: string= "";
+  mpn: string= "";
+  leadDurations: QuantityOriginDuration[] = [];
+  expectedReceptionDelay: Duration | undefined;
+
+
+  constructor(mainModel?: SecondModelItem) {
+    makeAutoObservable(this);
+
+    if (mainModel){
+      this.id = mainModel.id;
+      this.type = mainModel.type;
+      this.specId = mainModel.specId;
+      this.unitPrice = mainModel.unitPrice;
+      this.quantity = mainModel.quantity;
+      this.reference = mainModel.reference;
+      this.expectedReceptionDate = mainModel.expectedReceptionDate;
+      this.url = mainModel.url;
+      this.imageUrl = mainModel.imageUrl;
+      this.manufacturer = mainModel.manufacturer;
+      this.mpn = mainModel.mpn;
+      this.leadDurations = mainModel.leadDurations;
+      this.expectedReceptionDelay = mainModel.expectedReceptionDelay;
+    }
+  }
+
   static fromGrpc(secondModelItem: any): SecondModelItem {
     if (!secondModelItem.quantity)
       throw new Error("Can not SecondModelItem.fromGrpc with empty quantity");

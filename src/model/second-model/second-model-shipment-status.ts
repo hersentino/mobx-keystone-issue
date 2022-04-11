@@ -1,11 +1,16 @@
-import { model, Model, prop } from "mobx-keystone";
+import { makeAutoObservable } from "mobx";
 import SecondModelShipmentStatusType from "./second-model-shipment-status-type";
 
-@model("Rootstore/SecondModelShipmentStatus")
-class SecondModelShipmentStatus extends Model({
-  type: prop<SecondModelShipmentStatusType>(SecondModelShipmentStatusType.UNRECOGNIZED),
-  details: prop<string>(""),
-}) {
+class SecondModelShipmentStatus {
+  type: SecondModelShipmentStatusType = SecondModelShipmentStatusType.UNRECOGNIZED;
+  details: string = "";
+
+  constructor(mainModel: SecondModelShipmentStatus) {
+    makeAutoObservable(this);
+    this.type = mainModel.type;
+    this.details = mainModel.details;
+  }
+
   static fromGrpc(secondModelShipmentStatus: any): SecondModelShipmentStatus {
     return new this({
       type: secondModelShipmentStatus.type,

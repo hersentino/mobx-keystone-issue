@@ -1,14 +1,20 @@
-import { model, prop, Model } from "mobx-keystone";
 
+import { makeAutoObservable } from "mobx";
 import Duration from "../duration";
 import Quantity from "../quantity";
 
-@model("Rootstore/QuantityOriginDuration")
-class QuantityOriginDuration extends Model({
-  quantity: prop<Quantity | undefined>(undefined),
-  origin: prop<string>(""),
-  duration: prop<Duration | undefined>(undefined),
-}) {
+class QuantityOriginDuration {
+  quantity: Quantity | undefined;
+  origin: string = "";
+  duration: Duration | undefined;
+
+  constructor(mainModel: QuantityOriginDuration) {
+    makeAutoObservable(this);
+    this.quantity = mainModel.quantity;
+    this.origin = mainModel.origin;
+    this.duration = mainModel.duration;
+  }
+
   static fromGrpc(quantityOriginDuration: any): QuantityOriginDuration {
     return new this({
       origin: quantityOriginDuration.origin,

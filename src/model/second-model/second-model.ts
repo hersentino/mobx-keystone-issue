@@ -1,30 +1,51 @@
-import { model, prop, Model } from "mobx-keystone";
 import SecondModelItem from "./second-model-item";
 import SecondModelStatus from "./second-model-status";
 import SecondModelShipment from "./second-model-shipment";
 import SecondeModelPrice from "./second-model-price";
+import { makeAutoObservable } from "mobx";
 
-@model("Rootstore/SecondModel")
-class SecondModel extends Model({
-  id: prop<string>(""),
-  externalId: prop<string>(""),
-  supplierId: prop<string>(""),
-  supplierName: prop<string>(""),
-  items: prop<SecondModelItem[]>(() => []),
-  total: prop<number>(0),
-  orderTracking: prop<string>(""),
-  orderTrackingInternal: prop<string>(""),
-  orderingInfoId: prop<string>(""),
-  status: prop<SecondModelStatus | undefined>(undefined),
-  warehouse: prop<string>(""),
-  shipments: prop<SecondModelShipment[]>(() => []),
-  expiresAt: prop<string | undefined>(),
-  latestShipmentReceptionDate:  prop<string | undefined>(),
-  latestExpectedItemReceptionDate:  prop<string | undefined>(),
-  createdAt: prop<string | undefined>(),
-  updatedAt: prop<string | undefined>(),
-  prices: prop<SecondeModelPrice[]>(() => []),
-}) {
+class SecondModel {
+  id: string= "";
+  externalId: string= "";
+  supplierId: string= "";
+  supplierName: string= "";
+  items: SecondModelItem[]= [];
+  total: number= 0;
+  orderTracking: string= "";
+  orderTrackingInternal: string= "";
+  orderingInfoId: string= "";
+  status: SecondModelStatus | undefined;
+  warehouse: string= "";
+  shipments: SecondModelShipment[]= [];
+  expiresAt: string | undefined;
+  latestShipmentReceptionDate:  string | undefined;
+  latestExpectedItemReceptionDate:  string | undefined;
+  createdAt: string | undefined;
+  updatedAt: string | undefined;
+  prices: SecondeModelPrice[]= [];
+
+  constructor(mainModel: SecondModel) {
+    makeAutoObservable(this);
+    this.id = mainModel.id;
+    this.externalId = mainModel.externalId;
+    this.supplierId = mainModel.supplierId;
+    this.supplierName = mainModel.supplierName;
+    this.items = mainModel.items;
+    this.total = mainModel.total;
+    this.orderTracking = mainModel.orderTracking;
+    this.orderTrackingInternal = mainModel.orderTrackingInternal;
+    this.orderingInfoId = mainModel.orderingInfoId;
+    this.status = mainModel.status;
+    this.warehouse = mainModel.warehouse;
+    this.shipments = mainModel.shipments;
+    this.expiresAt = mainModel.expiresAt;
+    this.latestShipmentReceptionDate = mainModel.latestShipmentReceptionDate;
+    this.latestExpectedItemReceptionDate = mainModel.latestExpectedItemReceptionDate;
+    this.createdAt = mainModel.createdAt;
+    this.updatedAt = mainModel.updatedAt;
+    this.prices = mainModel.prices;
+  }
+
   static fromGrpc(secondModel: any): SecondModel {
     return new this({
       id: secondModel.id,

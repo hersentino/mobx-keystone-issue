@@ -1,21 +1,26 @@
-import { model, prop, Model, idProp } from "mobx-keystone";
+import { makeAutoObservable } from "mobx";
 import Price from "../price";
 
-@model("Rootstore/MainModelLine")
-class MainModelLine extends Model({
-  id: idProp,
-  name: prop<string>(""),
-  description: prop<string>(""),
-  priceEot: prop<Price>(),
-  taxRate: prop<number>(0),
-}) {
+class MainModelLine {
+  name: string = "";
+  description: string = "";
+  priceEot: Price;
+  taxRate: number = 0;
+
+  constructor(mainModel: MainModelLine) {
+    makeAutoObservable(this);
+    this.name = mainModel.name;
+    this.priceEot = mainModel.priceEot;
+    this.description = mainModel.description;
+    this.taxRate = mainModel.taxRate;
+  }
+
   static fromGrpc(mainModelLine: any): MainModelLine {
     const { priceEot } = mainModelLine;
 
     if (!priceEot)
       throw new Error("PriceEot is empty in MainModelLine");
     return new this({
-      id: mainModelLine.id,
       name: mainModelLine.name,
       description: mainModelLine.description,
       taxRate: mainModelLine.taxRate,

@@ -1,14 +1,20 @@
-import { model, prop, Model } from "mobx-keystone";
 
+import { makeAutoObservable } from "mobx";
 import Quantity from "../quantity";
 import QuotePricedItemSourceInfoPriceInfoPriceBreak from "./main-model-priced-item-source-info-price-info-price-break";
 
-@model("Rootstore/MainModelPricedItemSourceInfoPriceInfo")
-class MainModelPricedItemSourceInfoPriceInfo extends Model({
-  minimumQuantity: prop<Quantity | undefined>(undefined),
-  multipleQuantity: prop<Quantity | undefined>(undefined),
-  priceBreaks: prop<QuotePricedItemSourceInfoPriceInfoPriceBreak[]>(() => []),
-}) {
+class MainModelPricedItemSourceInfoPriceInfo {
+  minimumQuantity: Quantity | undefined;
+  multipleQuantity: Quantity | undefined;
+  priceBreaks: QuotePricedItemSourceInfoPriceInfoPriceBreak[] = [];
+
+  constructor(mainModel: MainModelPricedItemSourceInfoPriceInfo) {
+    makeAutoObservable(this);
+    this.minimumQuantity = mainModel.minimumQuantity;
+    this.multipleQuantity = mainModel.multipleQuantity;
+    this.priceBreaks =  mainModel.priceBreaks
+  }
+
   static fromGrpc(mainModelPricedItemSourceInfoPriceInfo: any): MainModelPricedItemSourceInfoPriceInfo {
     return new this({
       priceBreaks: mainModelPricedItemSourceInfoPriceInfo.priceBreaks.map((priceBreak:any) => QuotePricedItemSourceInfoPriceInfoPriceBreak.fromGrpc(priceBreak)),

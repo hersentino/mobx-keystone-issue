@@ -1,11 +1,16 @@
-import { model, Model, prop } from "mobx-keystone";
+import { makeAutoObservable } from "mobx";
 import MainModelStatusStatusType from "./main-model-status-status-type";
 
-@model("Rootstore/MainModelStatus")
-class MainModelStatus extends Model({
-  type: prop<MainModelStatusStatusType>(MainModelStatusStatusType.UNRECOGNIZED),
-  details: prop<string>(""),
-}) {
+class MainModelStatus {
+  type: MainModelStatusStatusType = MainModelStatusStatusType.UNRECOGNIZED;
+  details: string = ""
+
+  constructor(mainModel: MainModelStatus) {
+    makeAutoObservable(this);
+    this.type = mainModel.type;
+    this.details = mainModel.details;
+  }
+  
   static fromGrpc(mainModelStatus: any): MainModelStatus {
     return new this({
       details: mainModelStatus.details,

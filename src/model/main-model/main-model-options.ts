@@ -1,10 +1,14 @@
-import { model, prop, Model } from "mobx-keystone";
+import { makeAutoObservable } from "mobx";
 import MainModelOptionsItemTypeSupplierOptions from "./main-model-options-item-type-supplier-options";
 
-@model("MobxStore/Supplier/Quote/MainModelOptions")
-class MainModelOptions extends Model({
-  itemTypeSupplierOptions: prop<MainModelOptionsItemTypeSupplierOptions[]>(() => []),
-}) {
+class MainModelOptions {
+  itemTypeSupplierOptions: MainModelOptionsItemTypeSupplierOptions[] = [];
+
+  constructor(mainModel: MainModelOptions) {
+    makeAutoObservable(this);
+    this.itemTypeSupplierOptions = mainModel.itemTypeSupplierOptions;
+  }
+
   static fromGrpc(mainModelOptions: any): MainModelOptions {
     return new this({
       itemTypeSupplierOptions: mainModelOptions.itemTypeSupplierOptions.map((itemTypeSupplierOption: any) =>

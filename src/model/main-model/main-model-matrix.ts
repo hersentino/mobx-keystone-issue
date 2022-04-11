@@ -1,12 +1,17 @@
-import { model, prop, Model } from "mobx-keystone";
+import { makeAutoObservable } from "mobx";
 import Quote from "./main-model";
 import MainModelMatrixHeaders from "./main-model-matrix-headers";
 
-@model("Rootstore/MainModelMatrix")
-class MainModelMatrix extends Model({
-  headers: prop<MainModelMatrixHeaders | undefined>(),
-  quotes: prop<Quote[]>(() => []),
-}) {
+class MainModelMatrix {
+  headers: MainModelMatrixHeaders | undefined;
+  quotes: Quote[] = [];
+
+  constructor(mainModel: MainModelMatrix) {
+    makeAutoObservable(this);
+    this.headers = mainModel.headers;
+    this.quotes = mainModel.quotes;
+  }
+
   static fromGrpc(mainModelMatrix: any): MainModelMatrix {
     return new this({
       quotes: mainModelMatrix.quotes.map((quote: any) => Quote.fromGrpc(quote)),

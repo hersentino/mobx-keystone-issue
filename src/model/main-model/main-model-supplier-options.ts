@@ -1,4 +1,4 @@
-import { model, prop, Model } from "mobx-keystone";
+import { makeAutoObservable } from "mobx";
 import MainModelSupplierIdOrName from "./main-model-supplier-id-or-name";
 
 enum MainModelSupplierOptionsMode {
@@ -9,12 +9,16 @@ enum MainModelSupplierOptionsMode {
   UNRECOGNIZED = -1,
 }
 
+class MainModelSupplierOptions {
+  mode: MainModelSupplierOptionsMode = MainModelSupplierOptionsMode.UNRECOGNIZED;
+  supplierIdOrName: MainModelSupplierIdOrName | undefined = undefined;
 
-@model("Rootstore/MainModelSupplierOptions")
-class MainModelSupplierOptions extends Model({
-  mode: prop<MainModelSupplierOptionsMode>(MainModelSupplierOptionsMode.UNRECOGNIZED),
-  supplierIdOrName: prop<MainModelSupplierIdOrName | undefined>(undefined),
-}) {
+  constructor(mainModel: MainModelSupplierOptions) {
+    makeAutoObservable(this);
+    this.mode = mainModel.mode;
+    this.supplierIdOrName = mainModel.supplierIdOrName;
+  }
+
   static fromGrpc(mainModelSupplierOptions: any): MainModelSupplierOptions {
     return new this({
       supplierIdOrName: mainModelSupplierOptions.supplierIdOrName

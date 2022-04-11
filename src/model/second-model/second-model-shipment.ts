@@ -1,18 +1,28 @@
-import { model, Model, prop } from "mobx-keystone";
 import Shipper from "./shipper";
 import SecondModelShipmentStatus from "./second-model-shipment-status";
 import SecondModelItem from "./second-model-item";
+import { makeAutoObservable } from "mobx";
 
-@model("Rootstore/SecondModelShipment")
-class SecondModelShipment extends Model({
-  id: prop<string>(""),
-  trackingId: prop<string>(""),
-  shipper: prop<Shipper>(Shipper.UNRECOGNIZED),
-  status: prop<SecondModelShipmentStatus | undefined>(undefined),
-  content: prop<SecondModelItem[]>(() => []),
-  receivedAt: prop<string | undefined>(),
-  orderIds: prop<string[]>(() => []),
-}) {
+class SecondModelShipment {
+  id: string = "";
+  trackingId: string = "";
+  shipper: Shipper = Shipper.UNRECOGNIZED;
+  status: SecondModelShipmentStatus | undefined;
+  content: SecondModelItem[] = [];
+  receivedAt: string | undefined;
+  orderIds: string[] = [];
+
+  constructor(mainModel: SecondModelShipment) {
+    makeAutoObservable(this);
+    this.id = mainModel.id;
+    this.trackingId = mainModel.trackingId;
+    this.shipper = mainModel.shipper;
+    this.status = mainModel.status;
+    this.content = mainModel.content;
+    this.receivedAt = mainModel.receivedAt;
+    this.orderIds = mainModel.orderIds;
+  }
+
   static fromGrpc(secondModelShipment: any): SecondModelShipment {
     return new this({
       id: secondModelShipment.id,

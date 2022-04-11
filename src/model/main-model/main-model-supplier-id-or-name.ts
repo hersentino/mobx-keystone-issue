@@ -1,10 +1,15 @@
-import { model, Model, prop } from "mobx-keystone";
+import { makeAutoObservable } from "mobx";
 
-@model("Rootstore/MainModelSupplierIdOrName")
-class MainModelSupplierIdOrName extends Model({
-  supplierId: prop<string | undefined>(),
-  supplierName:  prop<string | undefined>(),
-}) {
+class MainModelSupplierIdOrName {
+  supplierId: string | undefined;
+  supplierName:  string | undefined;
+
+  constructor(mainModel: MainModelSupplierIdOrName) {
+    makeAutoObservable(this);
+    this.supplierId = mainModel.supplierId;
+    this.supplierName = mainModel.supplierName;
+  }
+  
   static fromGrpc(mainModelSupplierIdOrName: any): MainModelSupplierIdOrName {
     return new this({
       supplierId: mainModelSupplierIdOrName.supplierId,

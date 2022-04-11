@@ -1,13 +1,18 @@
-import { model, Model, prop } from "mobx-keystone";
+import { makeAutoObservable } from "mobx";
 import QuantityUnit from "./quantity-unit";
 
-@model("MobxStore/Common/Quantity/Quantity")
-class Quantity extends Model({
-  quantity: prop<number>(0),
-  unit: prop<QuantityUnit>(QuantityUnit.UNRECOGNIZED),
-}, {
-  valueType: true,
-}) {
+class Quantity {
+  quantity: number = 0;
+  unit: QuantityUnit = QuantityUnit.UNRECOGNIZED;
+
+  constructor(mainModel?: Quantity) {
+    makeAutoObservable(this);
+    if (mainModel) {
+      this.quantity = mainModel.quantity;
+      this.unit = mainModel.unit;
+    }
+  }
+
   static fromGrpc(quantity: any): Quantity {
     return new this({
       quantity: quantity.quantity,

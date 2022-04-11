@@ -10,30 +10,52 @@ import MainModelLine from "./main-model-line";
 import MainModelItemStatus from "./main-model-item-status";
 import MainModelPricedItem from "./main-model-priced-item";
 import SecondModel from "../second-model/second-model";
+import { makeAutoObservable } from "mobx";
 
-@model("Rootstore/MainModel")
-class MainModel extends Model({
-  id: prop<string>(""),
-  openDayDelivery: prop<Duration | undefined>(),
-  quantity: prop<number>(0),
-  pricingMode: prop<PricingMode>(PricingMode.UNKNOWN),
-  expiresAt: prop<string | undefined>(),
-  createdAt: prop<string | undefined>(),
-  updatedAt: prop<string | undefined>(),
-  validatedAt: prop<string | undefined>(),
-  status: prop<MainModelStatus| undefined>(),
-  items: prop<MainModelItem[]>(() => []),
-  quoteLines: prop<MainModelLine[]>(() => []),
-  totalPriceEot: prop<Price | undefined>(),
-  totalPriceIot: prop<Price | undefined>(),
-  quoteMatrixId: prop<string>(""),
-  isQuoteMatrixReference: prop<boolean>(false),
-  projectId:  prop<string>(""),
-  options: prop<MainModelOptions | undefined>(),
-  itemErrorStatusSummary: prop<MainModelItemStatus>(MainModelItemStatus.UNKNOWN),
-  pricedItems: prop<MainModelPricedItem[]>(() => []),
-  bestOrders: prop<SecondModel[]>(() => []),
-}) {
+class MainModel {
+  id: string = "";
+  openDayDelivery: Duration | undefined;
+  quantity: number = 0;
+  pricingMode: PricingMode = PricingMode.UNKNOWN;
+  expiresAt: string | undefined;
+  createdAt: string | undefined;
+  updatedAt: string | undefined;
+  validatedAt: string | undefined;
+  status: MainModelStatus| undefined;
+  items: MainModelItem[] = [];
+  quoteLines: MainModelLine[] = [];
+  totalPriceEot: Price | undefined;
+  totalPriceIot: Price | undefined;
+  quoteMatrixId: string = "";
+  isQuoteMatrixReference: boolean = false;
+  projectId:  string = "";
+  options: MainModelOptions | undefined;
+  itemErrorStatusSummary: MainModelItemStatus = MainModelItemStatus.UNKNOWN;
+  pricedItems: MainModelPricedItem[] = [];
+  bestOrders: SecondModel[] = [];
+
+  constructor(mainModel: MainModel) {
+    makeAutoObservable(this);
+    this.id = mainModel.id;
+    this.openDayDelivery = mainModel.openDayDelivery;
+    this.quantity = mainModel.quantity;
+    this.pricingMode = mainModel.pricingMode;
+    this.expiresAt = mainModel.expiresAt;
+    this.createdAt = mainModel.createdAt;
+    this.updatedAt = mainModel.updatedAt;
+    this.validatedAt = mainModel.validatedAt;
+    this.items = mainModel.items;
+    this.quoteLines = mainModel.quoteLines;
+    this.totalPriceEot = mainModel.totalPriceEot;
+    this.totalPriceIot = mainModel.totalPriceIot;
+    this.quoteMatrixId = mainModel.quoteMatrixId;
+    this.isQuoteMatrixReference = mainModel.isQuoteMatrixReference;
+    this.options = mainModel.options;
+    this.itemErrorStatusSummary = mainModel.itemErrorStatusSummary;
+    this.pricedItems = mainModel.pricedItems;
+    this.bestOrders = mainModel.bestOrders;
+  }
+
   static fromGrpc(mainModel: any): MainModel {
     if (!mainModel.status)
       throw new Error("Status is empty in Quote");

@@ -1,12 +1,17 @@
-import { model, prop, Model } from "mobx-keystone";
+import { makeAutoObservable } from "mobx";
 import SecondModelItemType from "../second-model/second-model-item-type";
 import MainModelSupplierOptions from "./main-model-supplier-options";
 
-@model("Rootstore/MainModelOptionsItemTypeSupplierOptions")
-class MainModelOptionsItemTypeSupplierOptions extends Model({
-  type: prop<SecondModelItemType>(SecondModelItemType.UNRECOGNIZED),
-  supplierOptions: prop<MainModelSupplierOptions | undefined>(undefined),
-}) {
+class MainModelOptionsItemTypeSupplierOptions {
+  type: SecondModelItemType = SecondModelItemType.UNRECOGNIZED
+  supplierOptions: MainModelSupplierOptions | undefined;
+
+  constructor(mainModel: MainModelOptionsItemTypeSupplierOptions) {
+    makeAutoObservable(this);
+    this.type = mainModel.type;
+    this.supplierOptions = mainModel.supplierOptions;
+  }
+
   static fromGrpc(
     mainModelOptionsItemTypeSupplierOptions: any
   ): MainModelOptionsItemTypeSupplierOptions {
