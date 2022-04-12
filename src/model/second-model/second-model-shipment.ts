@@ -12,15 +12,17 @@ class SecondModelShipment {
   receivedAt: string | undefined;
   orderIds: string[] = [];
 
-  constructor(mainModel: SecondModelShipment) {
+  constructor(mainModel?: SecondModelShipment) {
     makeAutoObservable(this);
-    this.id = mainModel.id;
-    this.trackingId = mainModel.trackingId;
-    this.shipper = mainModel.shipper;
-    this.status = mainModel.status;
-    this.content = mainModel.content;
-    this.receivedAt = mainModel.receivedAt;
-    this.orderIds = mainModel.orderIds;
+    if (mainModel){
+      this.id = mainModel.id;
+      this.trackingId = mainModel.trackingId;
+      this.shipper = mainModel.shipper;
+      this.status = mainModel.status;
+      this.content = mainModel.content;
+      this.receivedAt = mainModel.receivedAt;
+      this.orderIds = mainModel.orderIds;
+    }
   }
 
   static fromGrpc(secondModelShipment: any): SecondModelShipment {

@@ -4,9 +4,10 @@ import MainModelOptionsItemTypeSupplierOptions from "./main-model-options-item-t
 class MainModelOptions {
   itemTypeSupplierOptions: MainModelOptionsItemTypeSupplierOptions[] = [];
 
-  constructor(mainModel: MainModelOptions) {
+  constructor(mainModel?: MainModelOptions) {
     makeAutoObservable(this);
-    this.itemTypeSupplierOptions = mainModel.itemTypeSupplierOptions;
+    if (mainModel)
+      this.itemTypeSupplierOptions = mainModel.itemTypeSupplierOptions;
   }
 
   static fromGrpc(mainModelOptions: any): MainModelOptions {

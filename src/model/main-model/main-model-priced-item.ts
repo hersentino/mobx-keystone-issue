@@ -13,14 +13,16 @@ class MainModelPricedItem {
   unitPrice: Price | undefined;
   maxExpectedReceptionDelay: Duration | undefined;
 
-  constructor(mainModel: MainModelPricedItem) {
+  constructor(mainModel?: MainModelPricedItem) {
     makeAutoObservable(this);
-    this.maxExpectedReceptionDelay = mainModel.maxExpectedReceptionDelay;
-    this.supplierId = mainModel.supplierId;
-    this.sources = mainModel.sources;
-    this.status = mainModel.status;
-    this.originalOrderItemId = mainModel.originalOrderItemId;
-    this.unitPrice = mainModel.unitPrice;
+    if (mainModel){
+      this.maxExpectedReceptionDelay = mainModel.maxExpectedReceptionDelay;
+      this.supplierId = mainModel.supplierId;
+      this.sources = mainModel.sources;
+      this.status = mainModel.status;
+      this.originalOrderItemId = mainModel.originalOrderItemId;
+      this.unitPrice = mainModel.unitPrice;
+    }
   }
 
   static fromGrpc(mainModelPricedItem: any): MainModelPricedItem {

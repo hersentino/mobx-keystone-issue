@@ -1,13 +1,15 @@
 import { makeAutoObservable } from "mobx";
 
 class MainModelItemOptionsManufacturer {
-  manufacturer: string;
-  mpn: string;
+  manufacturer: string = "";
+  mpn: string = "";
 
-  constructor(mainModel: MainModelItemOptionsManufacturer) {
+  constructor(mainModel?: MainModelItemOptionsManufacturer) {
     makeAutoObservable(this);
-    this.manufacturer = mainModel.manufacturer;
-    this.mpn = mainModel.mpn;
+    if (mainModel){
+      this.manufacturer = mainModel.manufacturer;
+      this.mpn = mainModel.mpn;
+    }
   }
 
   static fromGrpc(mainModelItemOptionsManufacturer: any): MainModelItemOptionsManufacturer {

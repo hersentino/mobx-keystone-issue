@@ -13,10 +13,12 @@ class MainModelSupplierOptions {
   mode: MainModelSupplierOptionsMode = MainModelSupplierOptionsMode.UNRECOGNIZED;
   supplierIdOrName: MainModelSupplierIdOrName | undefined = undefined;
 
-  constructor(mainModel: MainModelSupplierOptions) {
+  constructor(mainModel?: MainModelSupplierOptions) {
     makeAutoObservable(this);
-    this.mode = mainModel.mode;
-    this.supplierIdOrName = mainModel.supplierIdOrName;
+    if (mainModel){
+      this.mode = mainModel.mode;
+      this.supplierIdOrName = mainModel.supplierIdOrName;
+    }
   }
 
   static fromGrpc(mainModelSupplierOptions: any): MainModelSupplierOptions {

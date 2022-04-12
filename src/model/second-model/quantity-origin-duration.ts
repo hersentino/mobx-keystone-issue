@@ -8,11 +8,13 @@ class QuantityOriginDuration {
   origin: string = "";
   duration: Duration | undefined;
 
-  constructor(mainModel: QuantityOriginDuration) {
+  constructor(mainModel?: QuantityOriginDuration) {
     makeAutoObservable(this);
-    this.quantity = mainModel.quantity;
-    this.origin = mainModel.origin;
-    this.duration = mainModel.duration;
+    if (mainModel){
+      this.quantity = mainModel.quantity;
+      this.origin = mainModel.origin;
+      this.duration = mainModel.duration;
+    }
   }
 
   static fromGrpc(quantityOriginDuration: any): QuantityOriginDuration {

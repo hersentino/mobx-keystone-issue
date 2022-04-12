@@ -8,22 +8,23 @@ import MainModelItemOptions from "./main-model-item-options";
 import MainModelItemStatus from "./main-model-item-status";
 
 class MainModelItem {
-  orderItem: SecondModelItem;
+  orderItem: SecondModelItem = new SecondModelItem();
   options: MainModelItemOptions | undefined = undefined; 
   status: MainModelItemStatus = MainModelItemStatus.UNKNOWN;
   hasInternalError: boolean = false;
   additionalQuantity: Quantity | undefined = undefined;
   minOpenDaysDuration: Duration | undefined = undefined;
 
-  constructor(mainModel: MainModelItem) {
+  constructor(mainModel?: MainModelItem) {
     makeAutoObservable(this);
-    this.orderItem = mainModel.orderItem;
-    this.options = mainModel.options;
-    this.status = mainModel.status;
-    this.hasInternalError = mainModel.hasInternalError;
-    this.additionalQuantity = mainModel.additionalQuantity;
-    this.minOpenDaysDuration = mainModel.minOpenDaysDuration;
-
+    if (mainModel) {
+      this.orderItem = mainModel.orderItem;
+      this.options = mainModel.options;
+      this.status = mainModel.status;
+      this.hasInternalError = mainModel.hasInternalError;
+      this.additionalQuantity = mainModel.additionalQuantity;
+      this.minOpenDaysDuration = mainModel.minOpenDaysDuration;
+    }
   }
 
   static fromGrpc(

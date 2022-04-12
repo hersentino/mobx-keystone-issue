@@ -34,26 +34,29 @@ class MainModel {
   pricedItems: MainModelPricedItem[] = [];
   bestOrders: SecondModel[] = [];
 
-  constructor(mainModel: MainModel) {
+  constructor(mainModel?: MainModel) {
     makeAutoObservable(this);
-    this.id = mainModel.id;
-    this.openDayDelivery = mainModel.openDayDelivery;
-    this.quantity = mainModel.quantity;
-    this.pricingMode = mainModel.pricingMode;
-    this.expiresAt = mainModel.expiresAt;
-    this.createdAt = mainModel.createdAt;
-    this.updatedAt = mainModel.updatedAt;
-    this.validatedAt = mainModel.validatedAt;
-    this.items = mainModel.items;
-    this.quoteLines = mainModel.quoteLines;
-    this.totalPriceEot = mainModel.totalPriceEot;
-    this.totalPriceIot = mainModel.totalPriceIot;
-    this.quoteMatrixId = mainModel.quoteMatrixId;
-    this.isQuoteMatrixReference = mainModel.isQuoteMatrixReference;
-    this.options = mainModel.options;
-    this.itemErrorStatusSummary = mainModel.itemErrorStatusSummary;
-    this.pricedItems = mainModel.pricedItems;
-    this.bestOrders = mainModel.bestOrders;
+
+    if (mainModel){
+      this.id = mainModel.id;
+      this.openDayDelivery = mainModel.openDayDelivery;
+      this.quantity = mainModel.quantity;
+      this.pricingMode = mainModel.pricingMode;
+      this.expiresAt = mainModel.expiresAt;
+      this.createdAt = mainModel.createdAt;
+      this.updatedAt = mainModel.updatedAt;
+      this.validatedAt = mainModel.validatedAt;
+      this.items = mainModel.items;
+      this.quoteLines = mainModel.quoteLines;
+      this.totalPriceEot = mainModel.totalPriceEot;
+      this.totalPriceIot = mainModel.totalPriceIot;
+      this.quoteMatrixId = mainModel.quoteMatrixId;
+      this.isQuoteMatrixReference = mainModel.isQuoteMatrixReference;
+      this.options = mainModel.options;
+      this.itemErrorStatusSummary = mainModel.itemErrorStatusSummary;
+      this.pricedItems = mainModel.pricedItems;
+      this.bestOrders = mainModel.bestOrders;
+    }
   }
 
   static fromGrpc(mainModel: any): MainModel {

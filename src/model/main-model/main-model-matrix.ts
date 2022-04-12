@@ -6,10 +6,13 @@ class MainModelMatrix {
   headers: MainModelMatrixHeaders | undefined;
   quotes: Quote[] = [];
 
-  constructor(mainModel: MainModelMatrix) {
+  constructor(mainModel?: MainModelMatrix) {
     makeAutoObservable(this);
-    this.headers = mainModel.headers;
-    this.quotes = mainModel.quotes;
+
+    if (mainModel){
+      this.headers = mainModel.headers;
+      this.quotes = mainModel.quotes;
+    }
   }
 
   static fromGrpc(mainModelMatrix: any): MainModelMatrix {

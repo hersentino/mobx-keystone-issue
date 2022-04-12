@@ -5,10 +5,12 @@ class MainModelMatrixHeaders  {
   delays: Duration[] = [];
   quantities: number[] = [];
 
-  constructor(mainModel: MainModelMatrixHeaders) {
+  constructor(mainModel?: MainModelMatrixHeaders) {
     makeAutoObservable(this);
-    this.delays = mainModel.delays;
-    this.quantities = mainModel.quantities;
+    if (mainModel){
+      this.delays = mainModel.delays;
+      this.quantities = mainModel.quantities;
+    }
   }
 
   static fromGrpc(mainModelMatrixHeaders: any): MainModelMatrixHeaders {

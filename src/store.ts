@@ -1,4 +1,4 @@
-import { makeAutoObservable } from "mobx";
+import { makeAutoObservable, action, intercept } from "mobx";
 import MainModel from "./model/main-model/main-model"
 
 export class RootStore {
@@ -6,13 +6,20 @@ export class RootStore {
   name: string = "";
 
   constructor(rootStore?: RootStore) {
-    makeAutoObservable(this)
+    makeAutoObservable(this, {
+      increment: action,
+      setName: action,
+      setMainModel: action
+    })
     if (rootStore){
       this.mainModel = rootStore.mainModel;
-      this.mainModel = rootStore.mainModel;
+      this.name = rootStore.name;
     }
   }
 
+  increment = () => {
+    console.log("lol")
+  }
 
   setName = (name: string) => {
     this.name = name;
@@ -27,6 +34,11 @@ export class RootStore {
 export function createRootStore(): RootStore {
   // the parameter is the initial data for the model
   const rootStore = new RootStore()
+
+  // intercept(rootStore, "mainModel", change => {
+  //   console.log("change", change)
+  //   return new MainModel()
+  // })
 
   // although not strictly required, it is always a good idea to register your root stores
   // as such, since this allows the model hook `onAttachedToRootStore` to work and other goodies

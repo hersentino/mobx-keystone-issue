@@ -4,10 +4,12 @@ class MainModelSupplierIdOrName {
   supplierId: string | undefined;
   supplierName:  string | undefined;
 
-  constructor(mainModel: MainModelSupplierIdOrName) {
+  constructor(mainModel?: MainModelSupplierIdOrName) {
     makeAutoObservable(this);
-    this.supplierId = mainModel.supplierId;
-    this.supplierName = mainModel.supplierName;
+    if (mainModel){
+      this.supplierId = mainModel.supplierId;
+      this.supplierName = mainModel.supplierName;
+    }
   }
   
   static fromGrpc(mainModelSupplierIdOrName: any): MainModelSupplierIdOrName {

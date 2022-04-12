@@ -12,13 +12,16 @@ class MainModelPricedItemSourceInfo {
   leadDurations: QuantityOriginDuration[] = [];
   deliveryDurations: QuantityOriginDuration[] = [];
 
-  constructor(mainModel: MainModelPricedItemSourceInfo) {
+  constructor(mainModel?: MainModelPricedItemSourceInfo) {
     makeAutoObservable(this);
-    this.pricedOrderItem = mainModel.pricedOrderItem;
-    this.stock = mainModel.stock;
-    this.priceInfo =  mainModel.priceInfo;
-    this.leadDurations =  mainModel.leadDurations;
-    this.deliveryDurations =  mainModel.deliveryDurations;
+
+    if (mainModel){
+      this.pricedOrderItem = mainModel.pricedOrderItem;
+      this.stock = mainModel.stock;
+      this.priceInfo =  mainModel.priceInfo;
+      this.leadDurations =  mainModel.leadDurations;
+      this.deliveryDurations =  mainModel.deliveryDurations;
+    }
   }
 
   static fromGrpc(mainModelPricedItemSourceInfo: any): MainModelPricedItemSourceInfo {

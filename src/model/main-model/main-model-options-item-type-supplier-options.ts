@@ -6,10 +6,13 @@ class MainModelOptionsItemTypeSupplierOptions {
   type: SecondModelItemType = SecondModelItemType.UNRECOGNIZED
   supplierOptions: MainModelSupplierOptions | undefined;
 
-  constructor(mainModel: MainModelOptionsItemTypeSupplierOptions) {
+  constructor(mainModel?: MainModelOptionsItemTypeSupplierOptions) {
     makeAutoObservable(this);
-    this.type = mainModel.type;
-    this.supplierOptions = mainModel.supplierOptions;
+
+    if (mainModel){
+      this.type = mainModel.type;
+      this.supplierOptions = mainModel.supplierOptions;
+    }
   }
 
   static fromGrpc(

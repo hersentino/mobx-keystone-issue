@@ -5,10 +5,12 @@ class SecondModelShipmentStatus {
   type: SecondModelShipmentStatusType = SecondModelShipmentStatusType.UNRECOGNIZED;
   details: string = "";
 
-  constructor(mainModel: SecondModelShipmentStatus) {
+  constructor(mainModel?: SecondModelShipmentStatus) {
     makeAutoObservable(this);
-    this.type = mainModel.type;
-    this.details = mainModel.details;
+    if (mainModel){
+      this.type = mainModel.type;
+      this.details = mainModel.details;
+    }
   }
 
   static fromGrpc(secondModelShipmentStatus: any): SecondModelShipmentStatus {

@@ -7,11 +7,14 @@ class QuotePricedItemSourceInfoPriceInfoPriceBreak {
   unitPrice: Price | undefined;
   multipleQuantity: Quantity | undefined;
 
-  constructor(mainModel: QuotePricedItemSourceInfoPriceInfoPriceBreak) {
+  constructor(mainModel?: QuotePricedItemSourceInfoPriceInfoPriceBreak) {
     makeAutoObservable(this);
-    this.minimumQuantity = mainModel.minimumQuantity;
-    this.unitPrice = mainModel.unitPrice;
-    this.multipleQuantity =  mainModel.multipleQuantity
+
+    if (mainModel){
+      this.minimumQuantity = mainModel.minimumQuantity;
+      this.unitPrice = mainModel.unitPrice;
+      this.multipleQuantity =  mainModel.multipleQuantity
+    }
   }
 
   static fromGrpc(

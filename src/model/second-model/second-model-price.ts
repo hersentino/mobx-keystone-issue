@@ -3,17 +3,19 @@ import Price from "../price";
 import SecondModelPriceType from "./second-model-price-type";
 
 class SecondeModelPrice {
-  id: string;
+  id: string = "";
   type: SecondModelPriceType = SecondModelPriceType.UNRECOGNIZED;
   price: Price | undefined;
   details: string = "";
 
-  constructor(mainModel: SecondeModelPrice) {
+  constructor(mainModel?: SecondeModelPrice) {
     makeAutoObservable(this);
-    this.id = mainModel.id;
-    this.type = mainModel.type;
-    this.price = mainModel.price;
-    this.details = mainModel.details;
+    if (mainModel){
+      this.id = mainModel.id;
+      this.type = mainModel.type;
+      this.price = mainModel.price;
+      this.details = mainModel.details;
+    }
   }
 
   static fromGrpc(secondeModelPrice: any): SecondeModelPrice {

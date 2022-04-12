@@ -5,10 +5,12 @@ class MainModelStatus {
   type: MainModelStatusStatusType = MainModelStatusStatusType.UNRECOGNIZED;
   details: string = ""
 
-  constructor(mainModel: MainModelStatus) {
+  constructor(mainModel?: MainModelStatus) {
     makeAutoObservable(this);
-    this.type = mainModel.type;
-    this.details = mainModel.details;
+    if (mainModel) {
+      this.type = mainModel.type;
+      this.details = mainModel.details;
+    }
   }
   
   static fromGrpc(mainModelStatus: any): MainModelStatus {

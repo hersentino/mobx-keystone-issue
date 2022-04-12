@@ -6,10 +6,12 @@ class MainModelItemOptions{
   supplierOptions: MainModelSupplierOptions[] = [];
   manufacturerOptions: MainModelItemOptionsManufacturer | undefined;
 
-  constructor(mainModel: MainModelItemOptions) {
+  constructor(mainModel?: MainModelItemOptions) {
     makeAutoObservable(this);
-    this.supplierOptions = mainModel.supplierOptions;
-    this.supplierOptions = mainModel.supplierOptions;
+    if (mainModel) {
+      this.supplierOptions = mainModel.supplierOptions;
+      this.supplierOptions = mainModel.supplierOptions;
+    }
   }
 
   static fromGrpc(mainModelItemOptions: any): MainModelItemOptions {

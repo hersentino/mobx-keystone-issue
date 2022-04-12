@@ -3,12 +3,14 @@ import SecondModelStatusType from "./second-model-status-type";
 
 class SecondModelStatus {
   type: SecondModelStatusType = SecondModelStatusType.UNRECOGNIZED;
-  details: string;
+  details: string = "";
  
-  constructor(mainModel: SecondModelStatus) {
+  constructor(mainModel?: SecondModelStatus) {
     makeAutoObservable(this);
-    this.type = mainModel.type;
-    this.details = mainModel.details;
+    if (mainModel){
+      this.type = mainModel.type;
+      this.details = mainModel.details;
+    }
   }
 
   static fromGrpc(secondModelStatus: any): SecondModelStatus {

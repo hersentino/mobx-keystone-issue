@@ -4,15 +4,17 @@ import Price from "../price";
 class MainModelLine {
   name: string = "";
   description: string = "";
-  priceEot: Price;
+  priceEot: Price = new Price();
   taxRate: number = 0;
 
-  constructor(mainModel: MainModelLine) {
+  constructor(mainModel?: MainModelLine) {
     makeAutoObservable(this);
-    this.name = mainModel.name;
-    this.priceEot = mainModel.priceEot;
-    this.description = mainModel.description;
-    this.taxRate = mainModel.taxRate;
+    if (mainModel) {  
+      this.name = mainModel.name;
+      this.priceEot = mainModel.priceEot;
+      this.description = mainModel.description;
+      this.taxRate = mainModel.taxRate;
+    }
   }
 
   static fromGrpc(mainModelLine: any): MainModelLine {
