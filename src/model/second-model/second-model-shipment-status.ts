@@ -2,7 +2,7 @@ import { types } from "mobx-state-tree"
 import SecondModelShipmentStatusType from "./second-model-shipment-status-type";
 
 const SecondModelShipmentStatus = types.model("SecondModelShipmentStatus", {
-  type: types.literal(SecondModelShipmentStatusType.UNRECOGNIZED),
+  type: types.number, // types.literal(SecondModelShipmentStatusType.UNRECOGNIZED),
   details: "",
 });
 

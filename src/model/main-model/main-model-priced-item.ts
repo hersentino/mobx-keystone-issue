@@ -8,7 +8,7 @@ const MainModelPricedItem = types.model("MainModelPricedItem", {
   supplierId: types.string,
   originalOrderItemId: types.string,
   sources: types.array(MainModelPricedItemSourceInfo),
-  status: types.literal(MainModelPricedItemStatus.UNKNOWN),
+  status: types.number, // types.literal(MainModelPricedItemStatus.UNKNOWN),
   unitPrice: types.maybe(Price),
   maxExpectedReceptionDelay: types.maybe(Duration),
 });

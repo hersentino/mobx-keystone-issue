@@ -4,7 +4,7 @@ import SecondModelPriceType from "./second-model-price-type";
 
 const SecondeModelPrice = types.model("SecondeModelPrice", {
   id: types.string,
-  type: types.literal(SecondModelPriceType.UNRECOGNIZED),
+  type: types.number, // types.literal(SecondModelPriceType.UNRECOGNIZED),
   price: types.maybe(Price),
   details: "",
 });

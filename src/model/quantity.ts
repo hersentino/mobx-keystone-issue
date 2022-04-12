@@ -3,7 +3,7 @@ import { types } from "mobx-state-tree"
 
 const Quantity = types.model("Quantity", {
   quantity: 0,
-  unit: types.literal(QuantityUnit.UNRECOGNIZED),
+  unit: types.maybe(types.number), // types.literal(QuantityUnit.UNRECOGNIZED),
 });
 
 export function fromGrpc(quantity: any) {

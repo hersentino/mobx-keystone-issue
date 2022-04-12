@@ -18,7 +18,7 @@ const RootStore2 = types.model({
 
 export function createRootStore() {
   // the parameter is the initial data for the model
-  const rootStore = RootStore2.create()
+  const rootStore = RootStore2.create({})
 
   // although not strictly required, it is always a good idea to register your root stores
   // as such, since this allows the model hook `onAttachedToRootStore` to work and other goodies

@@ -8,10 +8,10 @@ import QuantityOriginDuration, {fromGrpc as QuantityOriginDurationFromGrpc} from
 
 const SecondModelItem = types.model("SecondModelItem", {
   id: "",
-  type: types.literal(SecondModelItemType.UNRECOGNIZED),
+  type: types.number, // types.literal(SecondModelItemType.UNRECOGNIZED),
   specId: "",
   unitPrice: types.maybe(Price),
-  quantity: types.reference(Quantity),
+  quantity: types.maybe(Quantity),
   reference: "",
   expectedReceptionDate: types.maybe(types.string),
   url: "",

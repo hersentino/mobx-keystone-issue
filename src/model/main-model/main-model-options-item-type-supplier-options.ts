@@ -3,7 +3,7 @@ import SecondModelItemType from "../second-model/second-model-item-type";
 import MainModelSupplierOptions, {fromGrpc as MainModelSupplierOptionsFromGrpc} from "./main-model-supplier-options";
 
 const MainModelOptionsItemTypeSupplierOptions = types.model("MainModelOptionsItemTypeSupplierOptions", {
-  type: types.literal(SecondModelItemType.UNRECOGNIZED),
+  type: types.number, // types.literal(SecondModelItemType.UNRECOGNIZED),
   supplierOptions: types.maybe(MainModelSupplierOptions),
 });
 

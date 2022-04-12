@@ -12,10 +12,10 @@ import MainModelPricedItem, {fromGrpc as MainModelPricedItemFromGrpc} from "./ma
 import SecondModel, {fromGrpc as SecondModelFromGrpc} from "../second-model/second-model";
 
 const MainModel = types.model("MainModel", {
-  id: "",
+  id: types.maybe(types.identifier),
   openDayDelivery: types.maybe(Duration),
   quantity: 0,
-  pricingMode: types.literal(PricingMode.UNKNOWN),
+  pricingMode: types.number, // types.literal(PricingMode.UNKNOWN),
   expiresAt: types.maybe(types.string),
   createdAt: types.maybe(types.string),
   updatedAt: types.maybe(types.string),
@@ -29,7 +29,7 @@ const MainModel = types.model("MainModel", {
   isQuoteMatrixReference: false,
   projectId:  "",
   options: types.maybe(MainModelOptions),
-  itemErrorStatusSummary: types.literal(MainModelItemStatus.UNKNOWN),
+  itemErrorStatusSummary: types.number, // types.literal(MainModelItemStatus.UNKNOWN),
   pricedItems: types.array(MainModelPricedItem),
   bestOrders: types.array(SecondModel),
 });

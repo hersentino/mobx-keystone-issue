@@ -10,7 +10,7 @@ enum MainModelSupplierOptionsMode {
 }
 
 const MainModelSupplierOptions = types.model("MainModelSupplierOptions", {
-  mode: types.literal(MainModelSupplierOptionsMode.UNRECOGNIZED),
+  mode: types.number, // types.literal(MainModelSupplierOptionsMode.UNRECOGNIZED),
   supplierIdOrName: types.maybe(MainModelSupplierIdOrName),
 });
 

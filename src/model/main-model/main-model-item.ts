@@ -8,10 +8,9 @@ import MainModelItemOptions, {fromGrpc as MainModelItemOptionsFromGrpc} from "./
 import MainModelItemStatus from "./main-model-item-status";
 
 const MainModelItem = types.model("MainModelItem",{
-  id: types.string,
-  orderItem: types.reference(SecondModelItem),
+  orderItem: types.maybe(SecondModelItem),
   options: types.maybe(MainModelItemOptions),
-  status: types.literal(MainModelItemStatus.UNKNOWN),
+  status: types.number, // types.literal(MainModelItemStatus.UNKNOWN),
   hasInternalError: false,
   additionalQuantity: types.maybe(Quantity),
   minOpenDaysDuration: types.maybe(Duration)
@@ -24,11 +23,9 @@ export function fromGrpc(
     throw new Error("Can not QuoteItem.fromGrpc with empty orderItem");
 
   return MainModelItem.create({
-    id: mainModelItem.id,
     hasInternalError: mainModelItem.hasInternalError,
     additionalQuantity: mainModelItem.additionalQuantity ? QuantityFromGrpc(mainModelItem.additionalQuantity) : undefined,
     minOpenDaysDuration: mainModelItem.minOpenDaysDuration ? DurationfromGrpc(mainModelItem.minOpenDaysDuration) : undefined,
-        // @ts-ignore
     orderItem: SecondModelItemFromGrpc(mainModelItem.orderItem),
     options: mainModelItem.options ? MainModelItemOptionsFromGrpc(mainModelItem.options) : undefined,
     status: mainModelItem.status,

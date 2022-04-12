@@ -7,7 +7,7 @@ import SecondModelItem, {fromGrpc as SecondModelItemFromGrpc} from "./second-mod
 const SecondModelShipment = types.model("SecondModelShipment", {
   id: "",
   trackingId: "",
-  shipper: types.literal(Shipper.UNRECOGNIZED),
+  shipper: types.number, // types.literal(Shipper.UNRECOGNIZED),
   status: types.maybe(SecondModelShipmentStatus),
   content: types.array(SecondModelItem),
   receivedAt: types.maybe(types.string),

@@ -6,9 +6,9 @@ import QuantityOriginDuration, {fromGrpc as QuantityOriginDurationFromGrpc} from
 import MainModelPricedItemSourceInfoPriceInfo, {fromGrpc as MainModelPricedItemSourceInfoPriceInfoFromGrpc} from "./main-model-priced-item-source-info-price-info";
 
 const MainModelPricedItemSourceInfo = types.model("MainModelPricedItemSourceInfo", {
-  pricedOrderItem: types.reference(SecondModelItem),
+  pricedOrderItem: types.maybe(SecondModelItem),
   stock: types.maybe(Quantity),
-  priceInfo:  types.reference(MainModelPricedItemSourceInfoPriceInfo),
+  priceInfo:  types.maybe(MainModelPricedItemSourceInfoPriceInfo),
   leadDurations: types.array(QuantityOriginDuration),
   deliveryDurations: types.array(QuantityOriginDuration),
 });
@@ -18,16 +18,11 @@ export function fromGrpc(mainModelPricedItemSourceInfo: any) {
     throw new Error("Can not MainModelPricedItemSourceInfo.fromGrpc with empty pricedOrderItem");
 
   return MainModelPricedItemSourceInfo.create({
-    // @ts-ignore
     pricedOrderItem: SecondModelItemFromGrpc(mainModelPricedItemSourceInfo.pricedOrderItem),
-
     stock: mainModelPricedItemSourceInfo.stock ? QuantityFromGrpc(mainModelPricedItemSourceInfo.stock) : undefined,
-    // @ts-ignore
-
     priceInfo: mainModelPricedItemSourceInfo.priceInfo
       ? MainModelPricedItemSourceInfoPriceInfoFromGrpc(mainModelPricedItemSourceInfo.priceInfo)
       : undefined,
-
     leadDurations: mainModelPricedItemSourceInfo.leadDurations.map((leadDuration: any) => QuantityOriginDurationFromGrpc(leadDuration)),
     deliveryDurations: mainModelPricedItemSourceInfo.deliveryDurations.map((deliveryDuration: any) =>
       QuantityOriginDurationFromGrpc(deliveryDuration)

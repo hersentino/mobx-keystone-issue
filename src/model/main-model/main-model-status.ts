@@ -2,7 +2,7 @@ import { types } from "mobx-state-tree"
 import MainModelStatusStatusType from "./main-model-status-status-type";
 
 const MainModelStatus = types.model("MainModelStatus", {
-  type: types.literal(MainModelStatusStatusType.UNRECOGNIZED),
+  type: types.number, // types.literal(MainModelStatusStatusType.UNRECOGNIZED),
   details: "",
 });
 
