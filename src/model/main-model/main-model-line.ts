@@ -1,27 +1,28 @@
-import { model, prop, Model, idProp } from "mobx-keystone";
-import Price from "../price";
+import { types } from "mobx-state-tree"
+import Price, {fromGrpc as PriceFromGrpc} from "../price";
 
-@model("Rootstore/MainModelLine")
-class MainModelLine extends Model({
-  id: idProp,
-  name: prop<string>(""),
-  description: prop<string>(""),
-  priceEot: prop<Price>(),
-  taxRate: prop<number>(0),
-}) {
-  static fromGrpc(mainModelLine: any): MainModelLine {
-    const { priceEot } = mainModelLine;
+const MainModelLine = types.model("MainModelLine", {
+  id: types.string,
+  name: "",
+  description: "",
+  priceEot: types.reference(Price),
+  taxRate: 0,
+});
 
-    if (!priceEot)
-      throw new Error("PriceEot is empty in MainModelLine");
-    return new this({
-      id: mainModelLine.id,
-      name: mainModelLine.name,
-      description: mainModelLine.description,
-      taxRate: mainModelLine.taxRate,
-      priceEot: Price.fromGrpc(priceEot),
-    });
-  }
+
+export function fromGrpc(mainModelLine: any) {
+  const { priceEot } = mainModelLine;
+
+  if (!priceEot)
+    throw new Error("PriceEot is empty in MainModelLine");
+  return MainModelLine.create({
+    id: mainModelLine.id,
+    name: mainModelLine.name,
+    description: mainModelLine.description,
+    taxRate: mainModelLine.taxRate,
+    // @ts-ignore
+    priceEot: PriceFromGrpc(priceEot),
+  });
 }
 
 export default MainModelLine;

@@ -1,17 +1,17 @@
-import { model, prop, Model } from "mobx-keystone";
-import MainModelOptionsItemTypeSupplierOptions from "./main-model-options-item-type-supplier-options";
+import { types } from "mobx-state-tree"
+import MainModelOptionsItemTypeSupplierOptions, {fromGrpc as MainModelOptionsItemTypeSupplierOptionsFromGrpc} from "./main-model-options-item-type-supplier-options";
 
-@model("MobxStore/Supplier/Quote/MainModelOptions")
-class MainModelOptions extends Model({
-  itemTypeSupplierOptions: prop<MainModelOptionsItemTypeSupplierOptions[]>(() => []),
-}) {
-  static fromGrpc(mainModelOptions: any): MainModelOptions {
-    return new this({
-      itemTypeSupplierOptions: mainModelOptions.itemTypeSupplierOptions.map((itemTypeSupplierOption: any) =>
-      MainModelOptionsItemTypeSupplierOptions.fromGrpc(itemTypeSupplierOption)
-      ),
-    });
-  }
+
+const MainModelOptions = types.model("MainModelOptions", {
+  itemTypeSupplierOptions: types.array(MainModelOptionsItemTypeSupplierOptions),
+});
+
+export function fromGrpc(mainModelOptions: any) {
+  return MainModelOptions.create({
+    itemTypeSupplierOptions: mainModelOptions.itemTypeSupplierOptions.map((itemTypeSupplierOption: any) =>
+      MainModelOptionsItemTypeSupplierOptionsFromGrpc(itemTypeSupplierOption)
+    ),
+  });
 }
 
 export default MainModelOptions;

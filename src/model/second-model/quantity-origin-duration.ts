@@ -1,21 +1,20 @@
-import { model, prop, Model } from "mobx-keystone";
+import { types } from "mobx-state-tree"
 
-import Duration from "../duration";
-import Quantity from "../quantity";
+import Duration, {fromGrpc as DurationFromGrpc} from "../duration";
+import Quantity, {fromGrpc as QuantityFromGrpc} from "../quantity";
 
-@model("Rootstore/QuantityOriginDuration")
-class QuantityOriginDuration extends Model({
-  quantity: prop<Quantity | undefined>(undefined),
-  origin: prop<string>(""),
-  duration: prop<Duration | undefined>(undefined),
-}) {
-  static fromGrpc(quantityOriginDuration: any): QuantityOriginDuration {
-    return new this({
-      origin: quantityOriginDuration.origin,
-      quantity: quantityOriginDuration.quantity ? Quantity.fromGrpc(quantityOriginDuration.quantity) : undefined,
-      duration: quantityOriginDuration.duration ? Duration.fromGrpc(quantityOriginDuration.duration) : undefined,
-    });
-  }
+const QuantityOriginDuration = types.model("QuantityOriginDuration", {
+  quantity: types.maybe(Quantity),
+  origin: "",
+  duration: types.maybe(Duration),
+});
+
+export function fromGrpc(quantityOriginDuration: any) {
+  return QuantityOriginDuration.create({
+    origin: quantityOriginDuration.origin,
+    quantity: quantityOriginDuration.quantity ? QuantityFromGrpc(quantityOriginDuration.quantity) : undefined,
+    duration: quantityOriginDuration.duration ? DurationFromGrpc(quantityOriginDuration.duration) : undefined,
+  });
 }
 
 export default QuantityOriginDuration;

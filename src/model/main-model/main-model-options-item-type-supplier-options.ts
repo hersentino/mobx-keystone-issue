@@ -1,22 +1,21 @@
-import { model, prop, Model } from "mobx-keystone";
+import { types } from "mobx-state-tree"
 import SecondModelItemType from "../second-model/second-model-item-type";
-import MainModelSupplierOptions from "./main-model-supplier-options";
+import MainModelSupplierOptions, {fromGrpc as MainModelSupplierOptionsFromGrpc} from "./main-model-supplier-options";
 
-@model("Rootstore/MainModelOptionsItemTypeSupplierOptions")
-class MainModelOptionsItemTypeSupplierOptions extends Model({
-  type: prop<SecondModelItemType>(SecondModelItemType.UNRECOGNIZED),
-  supplierOptions: prop<MainModelSupplierOptions | undefined>(undefined),
-}) {
-  static fromGrpc(
-    mainModelOptionsItemTypeSupplierOptions: any
-  ): MainModelOptionsItemTypeSupplierOptions {
-    return new this({
-      supplierOptions: mainModelOptionsItemTypeSupplierOptions.supplierOptions
-        ? MainModelSupplierOptions.fromGrpc(mainModelOptionsItemTypeSupplierOptions.supplierOptions)
-        : undefined,
-      type: mainModelOptionsItemTypeSupplierOptions.type as unknown as SecondModelItemType,
-    });
-  }
+const MainModelOptionsItemTypeSupplierOptions = types.model("MainModelOptionsItemTypeSupplierOptions", {
+  type: types.literal(SecondModelItemType.UNRECOGNIZED),
+  supplierOptions: types.maybe(MainModelSupplierOptions),
+});
+
+export function fromGrpc(
+  mainModelOptionsItemTypeSupplierOptions: any
+) {
+  return MainModelOptionsItemTypeSupplierOptions.create({
+    supplierOptions: mainModelOptionsItemTypeSupplierOptions.supplierOptions
+      ? MainModelSupplierOptionsFromGrpc(mainModelOptionsItemTypeSupplierOptions.supplierOptions)
+      : undefined,
+    type: mainModelOptionsItemTypeSupplierOptions.type,
+  });
 }
 
 export default MainModelOptionsItemTypeSupplierOptions;

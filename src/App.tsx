@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import "./App.css";
-import MainModel from "./model/main-model/main-model";
+import MainModel , {fromGrpc as MainModelFromGrpc} from "./model/main-model/main-model";
 import getData from "./data";
 import { createRootStore } from "./store";
 
@@ -19,7 +19,7 @@ function App() {
           const data = await getData();
 
           const t0 = performance.now();
-          const mainModel = MainModel.fromGrpc(data);
+          const mainModel = MainModelFromGrpc(data);
           const t1 = performance.now();
           setResult1(t1 - t0);
 

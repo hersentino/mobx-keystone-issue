@@ -1,22 +1,20 @@
-import { model, prop, Model } from "mobx-keystone";
-import MainModelSupplierOptions from "./main-model-supplier-options";
-import MainModelItemOptionsManufacturer from "./main-model-item-options-manufacturer";
+import { types } from "mobx-state-tree"
+import MainModelSupplierOptions, {fromGrpc as MainModelSupplierOptionsFromGrpc} from "./main-model-supplier-options";
+import MainModelItemOptionsManufacturer, {fromGrpc as MainModelItemOptionsManufacturerFromGrpc} from "./main-model-item-options-manufacturer";
 
-@model("Rootstore/MainModelItemOptions")
-class MainModelItemOptions extends Model({
-  supplierOptions: prop<MainModelSupplierOptions[]>(() => []),
-  manufacturerOptions: prop<MainModelItemOptionsManufacturer | undefined>(undefined),
-}) {
-  static fromGrpc(mainModelItemOptions: any): MainModelItemOptions {
-    return new this({
-      supplierOptions: mainModelItemOptions.supplierOptions.map((quoteItemOption:any) => MainModelSupplierOptions.fromGrpc(quoteItemOption)),
-      manufacturerOptions: mainModelItemOptions.manufacturerOptions
-        ? MainModelItemOptionsManufacturer.fromGrpc(mainModelItemOptions.manufacturerOptions)
-        : undefined,
-    });
-  }
+const MainModelItemOptions = types.model("MainModelItemOptions",{
+  supplierOptions: types.array(MainModelSupplierOptions),
+  manufacturerOptions: types.maybe(MainModelItemOptionsManufacturer),
+})
 
-
+function fromGrpc(mainModelItemOptions: any) {
+  return MainModelItemOptions.create({
+    supplierOptions: mainModelItemOptions.supplierOptions.map((quoteItemOption:any) => MainModelSupplierOptionsFromGrpc(quoteItemOption)),
+    manufacturerOptions: mainModelItemOptions.manufacturerOptions 
+      ? MainModelItemOptionsManufacturerFromGrpc(mainModelItemOptions.manufacturerOptions)
+      : undefined,
+  });
 }
 
+export { fromGrpc };
 export default MainModelItemOptions;

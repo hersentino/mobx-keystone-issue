@@ -1,22 +1,21 @@
-import { model, Model, prop } from "mobx-keystone";
-import Price from "../price";
+import { types } from "mobx-state-tree"
+import Price, {fromGrpc as PriceFromGrpc} from "../price";
 import SecondModelPriceType from "./second-model-price-type";
 
-@model("Rootstore/SecondeModelPrice")
-class SecondeModelPrice extends Model({
-  id: prop<string>(),
-  type: prop<SecondModelPriceType>(SecondModelPriceType.UNRECOGNIZED),
-  price: prop<Price | undefined>(),
-  details: prop<string>(""),
-}) {
-  static fromGrpc(secondeModelPrice: any): SecondeModelPrice {
-    return new this({
-      id: secondeModelPrice.id,
-      details: secondeModelPrice.details,
-      type: secondeModelPrice.type as unknown as SecondModelPriceType,
-      price: secondeModelPrice.price ? Price.fromGrpc(secondeModelPrice.price) : undefined,
-    });
-  }
+const SecondeModelPrice = types.model("SecondeModelPrice", {
+  id: types.string,
+  type: types.literal(SecondModelPriceType.UNRECOGNIZED),
+  price: types.maybe(Price),
+  details: "",
+});
+
+export function fromGrpc(secondeModelPrice: any) {
+  return SecondeModelPrice.create({
+    id: secondeModelPrice.id,
+    details: secondeModelPrice.details,
+    type: secondeModelPrice.type,
+    price: secondeModelPrice.price ? PriceFromGrpc(secondeModelPrice.price) : undefined,
+  });
 }
 
 export default SecondeModelPrice;

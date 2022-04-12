@@ -1,30 +1,29 @@
-import { model, Model, prop } from "mobx-keystone";
+import { types } from "mobx-state-tree"
 import MainModelPricedItemStatus from "./main-model-priced-item-status";
-import Price from "../price";
-import Duration from "../duration";
-import MainModelPricedItemSourceInfo from "./main-model-priced-item-source-info";
+import Price, {fromGrpc as PriceFromGrpc} from "../price";
+import Duration, {fromGrpc as DurationFromGrpc} from "../duration";
+import MainModelPricedItemSourceInfo, {fromGrpc as MainModelPricedItemSourceInfoFromGrpc} from "./main-model-priced-item-source-info";
 
-@model("Rootstore/MainModelPricedItem")
-class MainModelPricedItem extends Model({
-  supplierId: prop<string>(),
-  originalOrderItemId: prop<string>(),
-  sources: prop<MainModelPricedItemSourceInfo[]>(() => []),
-  status: prop<MainModelPricedItemStatus>(MainModelPricedItemStatus.UNKNOWN),
-  unitPrice: prop<Price | undefined>(undefined),
-  maxExpectedReceptionDelay: prop<Duration | undefined>(undefined),
-}) {
-  static fromGrpc(mainModelPricedItem: any): MainModelPricedItem {
-    return new this({
-      supplierId: mainModelPricedItem.supplierId,
-      originalOrderItemId: mainModelPricedItem.originalOrderItemId,
-      sources: mainModelPricedItem.sources.map((source: any) => MainModelPricedItemSourceInfo.fromGrpc(source)),
-      status: mainModelPricedItem.status as unknown as MainModelPricedItemStatus,
-      unitPrice: mainModelPricedItem.unitPrice ? Price.fromGrpc(mainModelPricedItem.unitPrice) : undefined,
-      maxExpectedReceptionDelay: mainModelPricedItem.maxExpectedReceptionDelay
-        ? Duration.fromGrpc(mainModelPricedItem.maxExpectedReceptionDelay)
-        : undefined,
-    });
-  }
+const MainModelPricedItem = types.model("MainModelPricedItem", {
+  supplierId: types.string,
+  originalOrderItemId: types.string,
+  sources: types.array(MainModelPricedItemSourceInfo),
+  status: types.literal(MainModelPricedItemStatus.UNKNOWN),
+  unitPrice: types.maybe(Price),
+  maxExpectedReceptionDelay: types.maybe(Duration),
+});
+
+export function fromGrpc(mainModelPricedItem: any) {
+  return MainModelPricedItem.create({
+    supplierId: mainModelPricedItem.supplierId,
+    originalOrderItemId: mainModelPricedItem.originalOrderItemId,
+    sources: mainModelPricedItem.sources.map((source: any) => MainModelPricedItemSourceInfoFromGrpc(source)),
+    status: mainModelPricedItem.status,
+    unitPrice: mainModelPricedItem.unitPrice ? PriceFromGrpc(mainModelPricedItem.unitPrice) : undefined,
+    maxExpectedReceptionDelay: mainModelPricedItem.maxExpectedReceptionDelay
+      ? DurationFromGrpc(mainModelPricedItem.maxExpectedReceptionDelay)
+      : undefined,
+  });
 }
 
 export default MainModelPricedItem;

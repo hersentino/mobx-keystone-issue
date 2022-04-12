@@ -1,22 +1,21 @@
-import { model, prop, Model } from "mobx-keystone";
-import Quantity from "../quantity";
-import Price from "../price";
+import { types } from "mobx-state-tree"
+import Quantity, { fromGrpc as QuantityFromGrpc } from "../quantity";
+import Price, {fromGrpc as PriceFromGrpc} from "../price";
 
-@model("MobxStore/Supplier/Quote/QuotePricedItemSourceInfoPriceInfoPriceBreak")
-class QuotePricedItemSourceInfoPriceInfoPriceBreak extends Model({
-  minimumQuantity: prop<Quantity | undefined>(undefined),
-  unitPrice: prop<Price | undefined>(undefined),
-  multipleQuantity: prop<Quantity | undefined>(undefined),
-}) {
-  static fromGrpc(
-    quotePricedItems: any
-  ): QuotePricedItemSourceInfoPriceInfoPriceBreak {
-    return new this({
-      minimumQuantity: quotePricedItems.minimumQuantity ? Quantity.fromGrpc(quotePricedItems.minimumQuantity) : undefined,
-      unitPrice: quotePricedItems.unitPrice ? Price.fromGrpc(quotePricedItems.unitPrice) : undefined,
-      multipleQuantity: quotePricedItems.multipleQuantity ? Quantity.fromGrpc(quotePricedItems.multipleQuantity) : undefined,
-    });
-  }
+const QuotePricedItemSourceInfoPriceInfoPriceBreak = types.model("QuotePricedItemSourceInfoPriceInfoPriceBreak", {
+  minimumQuantity: types.maybe(Quantity),
+  unitPrice: types.maybe(Price),
+  multipleQuantity: types.maybe(Quantity),
+});
+
+export function fromGrpc(
+  quotePricedItems: any
+) {
+  return QuotePricedItemSourceInfoPriceInfoPriceBreak.create({
+    minimumQuantity: quotePricedItems.minimumQuantity ? QuantityFromGrpc(quotePricedItems.minimumQuantity) : undefined,
+    unitPrice: quotePricedItems.unitPrice ? PriceFromGrpc(quotePricedItems.unitPrice) : undefined,
+    multipleQuantity: quotePricedItems.multipleQuantity ? QuantityFromGrpc(quotePricedItems.multipleQuantity) : undefined,
+  });
 }
 
 export default QuotePricedItemSourceInfoPriceInfoPriceBreak;

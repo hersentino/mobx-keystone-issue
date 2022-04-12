@@ -1,16 +1,15 @@
-import { model, Model, prop } from "mobx-keystone";
+import { types } from "mobx-state-tree"
 
-@model("Rootstore/MainModelSupplierIdOrName")
-class MainModelSupplierIdOrName extends Model({
-  supplierId: prop<string | undefined>(),
-  supplierName:  prop<string | undefined>(),
-}) {
-  static fromGrpc(mainModelSupplierIdOrName: any): MainModelSupplierIdOrName {
-    return new this({
-      supplierId: mainModelSupplierIdOrName.supplierId,
-      supplierName: mainModelSupplierIdOrName.supplierName
-    });
-  }
+const MainModelSupplierIdOrName = types.model("MainModelSupplierIdOrName", {
+  supplierId: types.maybe(types.string),
+  supplierName:  types.maybe(types.string),
+});
+
+export function fromGrpc(mainModelSupplierIdOrName: any) {
+  return MainModelSupplierIdOrName.create({
+    supplierId: mainModelSupplierIdOrName.supplierId,
+    supplierName: mainModelSupplierIdOrName.supplierName
+  });
 }
 
 export default MainModelSupplierIdOrName;

@@ -1,22 +1,21 @@
-import { model, prop, Model } from "mobx-keystone";
+import { types } from "mobx-state-tree"
 
-import Quantity from "../quantity";
-import QuotePricedItemSourceInfoPriceInfoPriceBreak from "./main-model-priced-item-source-info-price-info-price-break";
+import Quantity, { fromGrpc as QuantityFromGrpc } from "../quantity";
+import QuotePricedItemSourceInfoPriceInfoPriceBreak, {fromGrpc as QuotePricedItemSourceInfoPriceInfoPriceBreakFromGrpc} from "./main-model-priced-item-source-info-price-info-price-break";
 
-@model("Rootstore/MainModelPricedItemSourceInfoPriceInfo")
-class MainModelPricedItemSourceInfoPriceInfo extends Model({
-  minimumQuantity: prop<Quantity | undefined>(undefined),
-  multipleQuantity: prop<Quantity | undefined>(undefined),
-  priceBreaks: prop<QuotePricedItemSourceInfoPriceInfoPriceBreak[]>(() => []),
-}) {
-  static fromGrpc(mainModelPricedItemSourceInfoPriceInfo: any): MainModelPricedItemSourceInfoPriceInfo {
-    return new this({
-      priceBreaks: mainModelPricedItemSourceInfoPriceInfo.priceBreaks.map((priceBreak:any) => QuotePricedItemSourceInfoPriceInfoPriceBreak.fromGrpc(priceBreak)),
-      minimumQuantity: mainModelPricedItemSourceInfoPriceInfo.minimumQuantity ? Quantity.fromGrpc(mainModelPricedItemSourceInfoPriceInfo.minimumQuantity) : undefined,
-      multipleQuantity: mainModelPricedItemSourceInfoPriceInfo.multipleQuantity ? Quantity.fromGrpc(mainModelPricedItemSourceInfoPriceInfo.multipleQuantity) : undefined,
-    });
-  }
 
+const MainModelPricedItemSourceInfoPriceInfo = types.model("MainModelPricedItemSourceInfoPriceInfo", {
+  minimumQuantity: types.maybe(Quantity),
+  multipleQuantity: types.maybe(Quantity),
+  priceBreaks: types.array(QuotePricedItemSourceInfoPriceInfoPriceBreak),
+});
+
+export function fromGrpc(mainModelPricedItemSourceInfoPriceInfo: any) {
+  return MainModelPricedItemSourceInfoPriceInfo.create({
+    priceBreaks: mainModelPricedItemSourceInfoPriceInfo.priceBreaks.map((priceBreak:any) => QuotePricedItemSourceInfoPriceInfoPriceBreakFromGrpc(priceBreak)),
+    minimumQuantity: mainModelPricedItemSourceInfoPriceInfo.minimumQuantity ? QuantityFromGrpc(mainModelPricedItemSourceInfoPriceInfo.minimumQuantity) : undefined,
+    multipleQuantity: mainModelPricedItemSourceInfoPriceInfo.multipleQuantity ? QuantityFromGrpc(mainModelPricedItemSourceInfoPriceInfo.multipleQuantity) : undefined,
+  });
 }
 
 export default MainModelPricedItemSourceInfoPriceInfo;

@@ -1,38 +1,38 @@
-import { model, prop, Model, idProp } from "mobx-keystone";
+import { types } from "mobx-state-tree"
 
-import Duration from "../duration";
+import Duration, { fromGrpc as DurationfromGrpc } from "../duration";
 
-import Quantity from "../quantity";
-import SecondModelItem from "../second-model/second-model-item";
-import MainModelItemOptions from "./main-model-item-options";
+import Quantity, {fromGrpc as QuantityFromGrpc} from "../quantity";
+import SecondModelItem, {fromGrpc as SecondModelItemFromGrpc} from "../second-model/second-model-item";
+import MainModelItemOptions, {fromGrpc as MainModelItemOptionsFromGrpc} from "./main-model-item-options";
 import MainModelItemStatus from "./main-model-item-status";
 
-@model("Rootstore/MainModelItem")
-class MainModelItem extends Model({
-  id: idProp,
-  orderItem: prop<SecondModelItem>(() => new SecondModelItem({})),
-  options: prop<MainModelItemOptions | undefined>(undefined),
-  status: prop<MainModelItemStatus>(MainModelItemStatus.UNKNOWN),
-  hasInternalError: prop<boolean>(false),
-  additionalQuantity: prop<Quantity | undefined>(undefined),
-  minOpenDaysDuration: prop<Duration | undefined>(undefined),
-}) {
-  static fromGrpc(
-    mainModelItem: any,
-  ): MainModelItem {
-    if (!mainModelItem.orderItem)
-      throw new Error("Can not QuoteItem.fromGrpc with empty orderItem");
+const MainModelItem = types.model("MainModelItem",{
+  id: types.string,
+  orderItem: types.reference(SecondModelItem),
+  options: types.maybe(MainModelItemOptions),
+  status: types.literal(MainModelItemStatus.UNKNOWN),
+  hasInternalError: false,
+  additionalQuantity: types.maybe(Quantity),
+  minOpenDaysDuration: types.maybe(Duration)
+})
 
-    return new this({
-      id: mainModelItem.id,
-      hasInternalError: mainModelItem.hasInternalError,
-      additionalQuantity: mainModelItem.additionalQuantity ? Quantity.fromGrpc(mainModelItem.additionalQuantity) : undefined,
-      minOpenDaysDuration: mainModelItem.minOpenDaysDuration ? Duration.fromGrpc(mainModelItem.minOpenDaysDuration) : undefined,
-      orderItem: SecondModelItem.fromGrpc(mainModelItem.orderItem),
-      options: mainModelItem.options ? MainModelItemOptions.fromGrpc(mainModelItem.options) : undefined,
-      status: mainModelItem.status as unknown as MainModelItemStatus,
-    });
-  }
+export function fromGrpc(
+  mainModelItem: any,
+) {
+  if (!mainModelItem.orderItem)
+    throw new Error("Can not QuoteItem.fromGrpc with empty orderItem");
+
+  return MainModelItem.create({
+    id: mainModelItem.id,
+    hasInternalError: mainModelItem.hasInternalError,
+    additionalQuantity: mainModelItem.additionalQuantity ? QuantityFromGrpc(mainModelItem.additionalQuantity) : undefined,
+    minOpenDaysDuration: mainModelItem.minOpenDaysDuration ? DurationfromGrpc(mainModelItem.minOpenDaysDuration) : undefined,
+        // @ts-ignore
+    orderItem: SecondModelItemFromGrpc(mainModelItem.orderItem),
+    options: mainModelItem.options ? MainModelItemOptionsFromGrpc(mainModelItem.options) : undefined,
+    status: mainModelItem.status,
+  });
 }
 
 export default MainModelItem;

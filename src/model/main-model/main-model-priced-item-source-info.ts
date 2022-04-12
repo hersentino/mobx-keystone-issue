@@ -1,36 +1,38 @@
-import { model, prop, Model } from "mobx-keystone";
+import { types } from "mobx-state-tree"
 
-import SecondModelItem from "../second-model/second-model-item";
-import Quantity from "../quantity";
-import QuantityOriginDuration from "../second-model/quantity-origin-duration";
-import MainModelPricedItemSourceInfoPriceInfo from "./main-model-priced-item-source-info-price-info";
+import SecondModelItem, {fromGrpc as SecondModelItemFromGrpc} from "../second-model/second-model-item";
+import Quantity, { fromGrpc as QuantityFromGrpc } from "../quantity";
+import QuantityOriginDuration, {fromGrpc as QuantityOriginDurationFromGrpc} from "../second-model/quantity-origin-duration";
+import MainModelPricedItemSourceInfoPriceInfo, {fromGrpc as MainModelPricedItemSourceInfoPriceInfoFromGrpc} from "./main-model-priced-item-source-info-price-info";
 
-@model("Rootstore/MainModelPricedItemSourceInfo")
-class MainModelPricedItemSourceInfo extends Model({
-  pricedOrderItem: prop<SecondModelItem>(() => new SecondModelItem({})),
-  stock: prop<Quantity | undefined>(undefined),
-  priceInfo: prop<MainModelPricedItemSourceInfoPriceInfo | undefined>(undefined),
-  leadDurations: prop<QuantityOriginDuration[]>(() => []),
-  deliveryDurations: prop<QuantityOriginDuration[]>(() => []),
-}) {
-  static fromGrpc(mainModelPricedItemSourceInfo: any): MainModelPricedItemSourceInfo {
-    if (!mainModelPricedItemSourceInfo.pricedOrderItem)
-      throw new Error("Can not MainModelPricedItemSourceInfo.fromGrpc with empty pricedOrderItem");
+const MainModelPricedItemSourceInfo = types.model("MainModelPricedItemSourceInfo", {
+  pricedOrderItem: types.reference(SecondModelItem),
+  stock: types.maybe(Quantity),
+  priceInfo:  types.reference(MainModelPricedItemSourceInfoPriceInfo),
+  leadDurations: types.array(QuantityOriginDuration),
+  deliveryDurations: types.array(QuantityOriginDuration),
+});
 
-    return new this({
-      pricedOrderItem: SecondModelItem.fromGrpc(mainModelPricedItemSourceInfo.pricedOrderItem),
+export function fromGrpc(mainModelPricedItemSourceInfo: any) {
+  if (!mainModelPricedItemSourceInfo.pricedOrderItem)
+    throw new Error("Can not MainModelPricedItemSourceInfo.fromGrpc with empty pricedOrderItem");
 
-      stock: mainModelPricedItemSourceInfo.stock ? Quantity.fromGrpc(mainModelPricedItemSourceInfo.stock) : undefined,
-      priceInfo: mainModelPricedItemSourceInfo.priceInfo
-        ? MainModelPricedItemSourceInfoPriceInfo.fromGrpc(mainModelPricedItemSourceInfo.priceInfo)
-        : undefined,
+  return MainModelPricedItemSourceInfo.create({
+    // @ts-ignore
+    pricedOrderItem: SecondModelItemFromGrpc(mainModelPricedItemSourceInfo.pricedOrderItem),
 
-      leadDurations: mainModelPricedItemSourceInfo.leadDurations.map((leadDuration: any) => QuantityOriginDuration.fromGrpc(leadDuration)),
-      deliveryDurations: mainModelPricedItemSourceInfo.deliveryDurations.map((deliveryDuration: any) =>
-        QuantityOriginDuration.fromGrpc(deliveryDuration)
-      ),
-    });
-  }
+    stock: mainModelPricedItemSourceInfo.stock ? QuantityFromGrpc(mainModelPricedItemSourceInfo.stock) : undefined,
+    // @ts-ignore
+
+    priceInfo: mainModelPricedItemSourceInfo.priceInfo
+      ? MainModelPricedItemSourceInfoPriceInfoFromGrpc(mainModelPricedItemSourceInfo.priceInfo)
+      : undefined,
+
+    leadDurations: mainModelPricedItemSourceInfo.leadDurations.map((leadDuration: any) => QuantityOriginDurationFromGrpc(leadDuration)),
+    deliveryDurations: mainModelPricedItemSourceInfo.deliveryDurations.map((deliveryDuration: any) =>
+      QuantityOriginDurationFromGrpc(deliveryDuration)
+    ),
+  });
 }
 
 export default MainModelPricedItemSourceInfo;

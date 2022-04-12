@@ -1,19 +1,21 @@
-import { idProp, model, Model, prop } from "mobx-keystone";
+import { types } from "mobx-state-tree"
 
-@model("MobxStore/Common/Google/Protobuf/Duration")
-class Duration extends Model({
- id: idProp,
-  seconds: prop<number>(0).withSetter(),
-  nanos: prop<number>(0).withSetter(),
-},{
-  valueType: true,
-}) {
-  static fromGrpc(duration: any): Duration {
-    return new this({
-      seconds: duration.seconds,
-      nanos: duration.nanos,
-    });
+const Duration = types.model("Duration", {
+  seconds: 0,
+  nanos: 0,
+}).actions((self) => {
+  return {
+    setSeconds: (s: number) => { self.seconds = s },
+    setNanos: (n: number) => { self.nanos = n }
   }
+});
+
+
+export function fromGrpc(duration: any) {
+  return  Duration.create({
+    seconds: duration.seconds,
+    nanos: duration.nanos,
+  });
 }
 
 export default Duration;

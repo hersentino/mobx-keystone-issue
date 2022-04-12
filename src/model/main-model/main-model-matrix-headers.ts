@@ -1,17 +1,16 @@
-import { model, prop, Model } from "mobx-keystone";
-import Duration from "../duration";
+import { types } from "mobx-state-tree"
+import Duration, { fromGrpc as DurationFromGrpc} from "../duration";
 
-@model("Rootstore/MainModelMatrixHeaders")
-class MainModelMatrixHeaders extends Model({
-  delays: prop<Duration[]>(() => []),
-  quantities: prop<number[]>(() => []),
-}) {
-  static fromGrpc(mainModelMatrixHeaders: any): MainModelMatrixHeaders {
-    return new this({
-      quantities: mainModelMatrixHeaders.quantities,
-      delays: mainModelMatrixHeaders.delays.map((delay: any) => Duration.fromGrpc(delay)),
-    });
-  }
+const MainModelMatrixHeaders = types.model("MainModelMatrixHeaders", {
+  delays: types.array(Duration),
+  quantities: types.array(types.number),
+});
+
+export function fromGrpc(mainModelMatrixHeaders: any) {
+  return MainModelMatrixHeaders.create({
+    quantities: mainModelMatrixHeaders.quantities,
+    delays: mainModelMatrixHeaders.delays.map((delay: any) => DurationFromGrpc(delay)),
+  });
 }
 
 export default MainModelMatrixHeaders;

@@ -1,18 +1,17 @@
-import { model, prop, Model } from "mobx-keystone";
-import Quote from "./main-model";
-import MainModelMatrixHeaders from "./main-model-matrix-headers";
+import { types } from "mobx-state-tree"
+import Quote, {fromGrpc as QuoteFromGrpc} from "./main-model";
+import MainModelMatrixHeaders, {fromGrpc as MainModelMatrixHeadersFromGrpc} from "./main-model-matrix-headers";
 
-@model("Rootstore/MainModelMatrix")
-class MainModelMatrix extends Model({
-  headers: prop<MainModelMatrixHeaders | undefined>(),
-  quotes: prop<Quote[]>(() => []),
-}) {
-  static fromGrpc(mainModelMatrix: any): MainModelMatrix {
-    return new this({
-      quotes: mainModelMatrix.quotes.map((quote: any) => Quote.fromGrpc(quote)),
-      headers: mainModelMatrix.headers ? MainModelMatrixHeaders.fromGrpc(mainModelMatrix.headers) : undefined,
-    });
-  }
+const MainModelMatrix = types.model("MainModelMatrix", {
+  headers: types.maybe(MainModelMatrixHeaders),
+  quotes: types.array(Quote),
+});
+
+export function fromGrpc(mainModelMatrix: any) {
+  return MainModelMatrix.create({
+    quotes: mainModelMatrix.quotes.map((quote: any) => QuoteFromGrpc(quote)),
+    headers: mainModelMatrix.headers ? MainModelMatrixHeadersFromGrpc(mainModelMatrix.headers) : undefined,
+  });
 }
 
 export default MainModelMatrix;

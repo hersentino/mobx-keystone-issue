@@ -1,5 +1,5 @@
-import { model, prop, Model } from "mobx-keystone";
-import MainModelSupplierIdOrName from "./main-model-supplier-id-or-name";
+import { types } from "mobx-state-tree"
+import MainModelSupplierIdOrName, { fromGrpc as MainModelSupplierIdOrNameFromGrpc } from "./main-model-supplier-id-or-name";
 
 enum MainModelSupplierOptionsMode {
   PREFERRED = 0,
@@ -9,20 +9,18 @@ enum MainModelSupplierOptionsMode {
   UNRECOGNIZED = -1,
 }
 
+const MainModelSupplierOptions = types.model("MainModelSupplierOptions", {
+  mode: types.literal(MainModelSupplierOptionsMode.UNRECOGNIZED),
+  supplierIdOrName: types.maybe(MainModelSupplierIdOrName),
+});
 
-@model("Rootstore/MainModelSupplierOptions")
-class MainModelSupplierOptions extends Model({
-  mode: prop<MainModelSupplierOptionsMode>(MainModelSupplierOptionsMode.UNRECOGNIZED),
-  supplierIdOrName: prop<MainModelSupplierIdOrName | undefined>(undefined),
-}) {
-  static fromGrpc(mainModelSupplierOptions: any): MainModelSupplierOptions {
-    return new this({
-      supplierIdOrName: mainModelSupplierOptions.supplierIdOrName
-        ? MainModelSupplierIdOrName.fromGrpc(mainModelSupplierOptions.supplierIdOrName)
-        : undefined,
-      mode: mainModelSupplierOptions.mode as unknown as MainModelSupplierOptionsMode,
-    });
-  }
+export function fromGrpc(mainModelSupplierOptions: any) {
+  return MainModelSupplierOptions.create({
+    supplierIdOrName: mainModelSupplierOptions.supplierIdOrName
+      ? MainModelSupplierIdOrNameFromGrpc(mainModelSupplierOptions.supplierIdOrName)
+      : undefined,
+    mode: mainModelSupplierOptions.mode,
+  });
 }
 
 export default MainModelSupplierOptions;
