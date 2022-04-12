@@ -1,4 +1,4 @@
-import { model, prop, Model, idProp } from "mobx-keystone";
+import { model, prop, DataModel, ModelData } from "mobx-keystone";
 
 import Duration from "../duration";
 import PricingMode from "./pricing-mode";
@@ -12,33 +12,33 @@ import MainModelPricedItem from "./main-model-priced-item";
 import SecondModel from "../second-model/second-model";
 
 @model("Rootstore/MainModel")
-class MainModel extends Model({
+class MainModel extends DataModel({
   id: prop<string>(""),
-  openDayDelivery: prop<Duration | undefined>(),
+  openDayDelivery: prop<ModelData<Duration> | undefined>(),
   quantity: prop<number>(0),
   pricingMode: prop<PricingMode>(PricingMode.UNKNOWN),
   expiresAt: prop<string | undefined>(),
   createdAt: prop<string | undefined>(),
   updatedAt: prop<string | undefined>(),
   validatedAt: prop<string | undefined>(),
-  status: prop<MainModelStatus| undefined>(),
-  items: prop<MainModelItem[]>(() => []),
-  quoteLines: prop<MainModelLine[]>(() => []),
-  totalPriceEot: prop<Price | undefined>(),
-  totalPriceIot: prop<Price | undefined>(),
+  status: prop<ModelData<MainModelStatus> | undefined>(),
+  items: prop<ModelData<MainModelItem>[]>(() => []),
+  quoteLines: prop<ModelData<MainModelLine>[]>(() => []),
+  totalPriceEot: prop<ModelData<Price> | undefined>(),
+  totalPriceIot: prop<ModelData<Price> | undefined>(),
   quoteMatrixId: prop<string>(""),
   isQuoteMatrixReference: prop<boolean>(false),
   projectId:  prop<string>(""),
-  options: prop<MainModelOptions | undefined>(),
+  options: prop<ModelData<MainModelOptions> | undefined>(),
   itemErrorStatusSummary: prop<MainModelItemStatus>(MainModelItemStatus.UNKNOWN),
-  pricedItems: prop<MainModelPricedItem[]>(() => []),
-  bestOrders: prop<SecondModel[]>(() => []),
+  pricedItems: prop<ModelData<MainModelPricedItem>[]>(() => []),
+  bestOrders: prop<ModelData<SecondModel>[]>(() => []),
 }) {
-  static fromGrpc(mainModel: any): MainModel {
+  static fromGrpc(mainModel: any): ModelData<MainModel> {
     if (!mainModel.status)
       throw new Error("Status is empty in Quote");
 
-    return new this({
+    return {
       id: mainModel.id,
       quantity: mainModel.quantity,
       expiresAt: mainModel.expiresAt,
@@ -59,7 +59,11 @@ class MainModel extends Model({
       totalPriceIot: mainModel.totalPriceIot ? Price.fromGrpc(mainModel.totalPriceIot) : undefined,
       options: mainModel.options ? MainModelOptions.fromGrpc(mainModel.options) : undefined,
       itemErrorStatusSummary: mainModel.itemErrorStatusSummary as unknown as MainModelItemStatus,
-    });
+    };
+  }
+
+  static test(mainModel: ModelData<MainModel>):MainModel {
+    return new this(mainModel)
   }
 }
 

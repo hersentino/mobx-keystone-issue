@@ -3,6 +3,7 @@ import {
   model,
   Model,
   ModelAutoTypeCheckingMode,
+  ModelData,
   prop,
   registerRootStore,
   setGlobalConfig,
@@ -16,7 +17,7 @@ setGlobalConfig({
 
 @model("RootStore")
 export class RootStore extends Model({
-  mainModel: prop<MainModel | undefined>().withSetter(),
+  mainModel: prop<ModelData<MainModel> | undefined>().withSetter(),
   name: prop<string>("").withSetter(),
 }) {}
 
@@ -26,15 +27,15 @@ export function createRootStore(): RootStore {
 
   // although not strictly required, it is always a good idea to register your root stores
   // as such, since this allows the model hook `onAttachedToRootStore` to work and other goodies
-  registerRootStore(rootStore)
+  // registerRootStore(rootStore)
 
-  // we can also connect the store to the redux dev tools
-  const remotedev = require("remotedev")
-  const connection = remotedev.connectViaExtension({
-    name: "Todo List Example",
-  })
+  // // we can also connect the store to the redux dev tools
+  // const remotedev = require("remotedev")
+  // const connection = remotedev.connectViaExtension({
+  //   name: "Todo List Example",
+  // })
 
-  connectReduxDevTools(remotedev, connection, rootStore)
+  // connectReduxDevTools(remotedev, connection, rootStore)
 
   return rootStore
 }

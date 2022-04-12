@@ -19,14 +19,16 @@ function App() {
           const data = await getData();
 
           const t0 = performance.now();
-          const mainModel = MainModel.fromGrpc(data);
+          const mainModel = MainModel.test(MainModel.fromGrpc(data));
           const t1 = performance.now();
+        
           setResult1(t1 - t0);
 
 
           const t2 = performance.now();
-          rootStore.setMainModel(mainModel);
+          rootStore.setMainModel(mainModel.$);
           const t3 = performance.now();
+
           setResult2(t3 - t2);
         }}
       >

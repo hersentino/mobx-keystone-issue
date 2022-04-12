@@ -1,20 +1,20 @@
-import { model, Model, prop } from "mobx-keystone";
+import { DataModel, model, ModelData, prop } from "mobx-keystone";
 import MainModelPricedItemStatus from "./main-model-priced-item-status";
 import Price from "../price";
 import Duration from "../duration";
 import MainModelPricedItemSourceInfo from "./main-model-priced-item-source-info";
 
 @model("Rootstore/MainModelPricedItem")
-class MainModelPricedItem extends Model({
+class MainModelPricedItem extends DataModel({
   supplierId: prop<string>(),
   originalOrderItemId: prop<string>(),
-  sources: prop<MainModelPricedItemSourceInfo[]>(() => []),
+  sources: prop<ModelData<MainModelPricedItemSourceInfo>[]>(() => []),
   status: prop<MainModelPricedItemStatus>(MainModelPricedItemStatus.UNKNOWN),
-  unitPrice: prop<Price | undefined>(undefined),
-  maxExpectedReceptionDelay: prop<Duration | undefined>(undefined),
+  unitPrice: prop<ModelData<Price> | undefined>(undefined),
+  maxExpectedReceptionDelay: prop<ModelData<Duration> | undefined>(undefined),
 }) {
-  static fromGrpc(mainModelPricedItem: any): MainModelPricedItem {
-    return new this({
+  static fromGrpc(mainModelPricedItem: any): ModelData<MainModelPricedItem> {
+    return {
       supplierId: mainModelPricedItem.supplierId,
       originalOrderItemId: mainModelPricedItem.originalOrderItemId,
       sources: mainModelPricedItem.sources.map((source: any) => MainModelPricedItemSourceInfo.fromGrpc(source)),
@@ -23,7 +23,7 @@ class MainModelPricedItem extends Model({
       maxExpectedReceptionDelay: mainModelPricedItem.maxExpectedReceptionDelay
         ? Duration.fromGrpc(mainModelPricedItem.maxExpectedReceptionDelay)
         : undefined,
-    });
+    };
   }
 }
 

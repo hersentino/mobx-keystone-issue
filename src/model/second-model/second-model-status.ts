@@ -1,16 +1,16 @@
-import { model, Model, prop } from "mobx-keystone";
+import { DataModel, model, ModelData, prop } from "mobx-keystone";
 import SecondModelStatusType from "./second-model-status-type";
 
 @model("Rootstore/SecondModelStatus")
-class SecondModelStatus extends Model({
+class SecondModelStatus extends DataModel({
   type: prop<SecondModelStatusType>(SecondModelStatusType.UNRECOGNIZED),
   details: prop<string>(),
 }) {
-  static fromGrpc(secondModelStatus: any): SecondModelStatus {
-    return new this({
+  static fromGrpc(secondModelStatus: any): ModelData<SecondModelStatus> {
+    return {
       details: secondModelStatus.details,
       type: secondModelStatus.type as unknown as SecondModelStatusType,
-    });
+    };
   }
 }
 

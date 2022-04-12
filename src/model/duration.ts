@@ -1,18 +1,14 @@
-import { idProp, model, Model, prop } from "mobx-keystone";
+import { DataModel, prop, ModelData } from "mobx-keystone";
 
-@model("MobxStore/Common/Google/Protobuf/Duration")
-class Duration extends Model({
- id: idProp,
+class Duration extends DataModel({
   seconds: prop<number>(0).withSetter(),
   nanos: prop<number>(0).withSetter(),
-},{
-  valueType: true,
 }) {
-  static fromGrpc(duration: any): Duration {
-    return new this({
+  static fromGrpc(duration: any): ModelData<Duration> {
+    return {
       seconds: duration.seconds,
       nanos: duration.nanos,
-    });
+    };
   }
 }
 

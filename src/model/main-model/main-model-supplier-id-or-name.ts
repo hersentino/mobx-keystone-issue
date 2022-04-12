@@ -1,15 +1,15 @@
-import { model, Model, prop } from "mobx-keystone";
+import { model, DataModel, prop, ModelData } from "mobx-keystone";
 
 @model("Rootstore/MainModelSupplierIdOrName")
-class MainModelSupplierIdOrName extends Model({
+class MainModelSupplierIdOrName extends DataModel({
   supplierId: prop<string | undefined>(),
   supplierName:  prop<string | undefined>(),
 }) {
-  static fromGrpc(mainModelSupplierIdOrName: any): MainModelSupplierIdOrName {
-    return new this({
+  static fromGrpc(mainModelSupplierIdOrName: any): ModelData<MainModelSupplierIdOrName> {
+    return {
       supplierId: mainModelSupplierIdOrName.supplierId,
       supplierName: mainModelSupplierIdOrName.supplierName
-    });
+    };
   }
 }
 

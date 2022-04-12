@@ -1,20 +1,20 @@
-import { model, Model, prop } from "mobx-keystone";
+import { DataModel, model, ModelData, prop } from "mobx-keystone";
 import Shipper from "./shipper";
 import SecondModelShipmentStatus from "./second-model-shipment-status";
 import SecondModelItem from "./second-model-item";
 
 @model("Rootstore/SecondModelShipment")
-class SecondModelShipment extends Model({
+class SecondModelShipment extends DataModel({
   id: prop<string>(""),
   trackingId: prop<string>(""),
   shipper: prop<Shipper>(Shipper.UNRECOGNIZED),
-  status: prop<SecondModelShipmentStatus | undefined>(undefined),
-  content: prop<SecondModelItem[]>(() => []),
+  status: prop<ModelData<SecondModelShipmentStatus> | undefined>(undefined),
+  content: prop<ModelData<SecondModelItem>[]>(() => []),
   receivedAt: prop<string | undefined>(),
   orderIds: prop<string[]>(() => []),
 }) {
-  static fromGrpc(secondModelShipment: any): SecondModelShipment {
-    return new this({
+  static fromGrpc(secondModelShipment: any): ModelData<SecondModelShipment> {
+    return {
       id: secondModelShipment.id,
       trackingId: secondModelShipment.trackingId,
       receivedAt: secondModelShipment.receivedAt,
@@ -22,7 +22,7 @@ class SecondModelShipment extends Model({
       shipper: secondModelShipment.shipper as unknown as Shipper,
       status: secondModelShipment.status ? SecondModelShipmentStatus.fromGrpc(secondModelShipment.status) : undefined,
       content: secondModelShipment.content.map((c: any) => SecondModelItem.fromGrpc(c)),
-    });
+    };
   }
 }
 

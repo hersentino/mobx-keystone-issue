@@ -1,17 +1,17 @@
-import { model, prop, Model } from "mobx-keystone";
+import { model, prop, ModelData, DataModel } from "mobx-keystone";
 import Quote from "./main-model";
 import MainModelMatrixHeaders from "./main-model-matrix-headers";
 
 @model("Rootstore/MainModelMatrix")
-class MainModelMatrix extends Model({
-  headers: prop<MainModelMatrixHeaders | undefined>(),
-  quotes: prop<Quote[]>(() => []),
+class MainModelMatrix extends DataModel({
+  headers: prop<ModelData<MainModelMatrixHeaders> | undefined>(),
+  quotes: prop<ModelData<Quote>[]>(() => []),
 }) {
-  static fromGrpc(mainModelMatrix: any): MainModelMatrix {
-    return new this({
+  static fromGrpc(mainModelMatrix: any): ModelData<MainModelMatrix> {
+    return {
       quotes: mainModelMatrix.quotes.map((quote: any) => Quote.fromGrpc(quote)),
       headers: mainModelMatrix.headers ? MainModelMatrixHeaders.fromGrpc(mainModelMatrix.headers) : undefined,
-    });
+    };
   }
 }
 

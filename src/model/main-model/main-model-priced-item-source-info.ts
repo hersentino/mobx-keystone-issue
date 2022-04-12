@@ -1,4 +1,4 @@
-import { model, prop, Model } from "mobx-keystone";
+import { model, prop, Model, ModelData } from "mobx-keystone";
 
 import SecondModelItem from "../second-model/second-model-item";
 import Quantity from "../quantity";
@@ -7,17 +7,17 @@ import MainModelPricedItemSourceInfoPriceInfo from "./main-model-priced-item-sou
 
 @model("Rootstore/MainModelPricedItemSourceInfo")
 class MainModelPricedItemSourceInfo extends Model({
-  pricedOrderItem: prop<SecondModelItem>(() => new SecondModelItem({})),
-  stock: prop<Quantity | undefined>(undefined),
-  priceInfo: prop<MainModelPricedItemSourceInfoPriceInfo | undefined>(undefined),
-  leadDurations: prop<QuantityOriginDuration[]>(() => []),
-  deliveryDurations: prop<QuantityOriginDuration[]>(() => []),
+  pricedOrderItem: prop<ModelData<SecondModelItem>>(() => new SecondModelItem({}).$),
+  stock: prop<ModelData<Quantity> | undefined>(undefined),
+  priceInfo: prop<ModelData<MainModelPricedItemSourceInfoPriceInfo> | undefined>(undefined),
+  leadDurations: prop<ModelData<QuantityOriginDuration>[]>(() => []),
+  deliveryDurations: prop<ModelData<QuantityOriginDuration>[]>(() => []),
 }) {
-  static fromGrpc(mainModelPricedItemSourceInfo: any): MainModelPricedItemSourceInfo {
+  static fromGrpc(mainModelPricedItemSourceInfo: any): ModelData<MainModelPricedItemSourceInfo> {
     if (!mainModelPricedItemSourceInfo.pricedOrderItem)
       throw new Error("Can not MainModelPricedItemSourceInfo.fromGrpc with empty pricedOrderItem");
 
-    return new this({
+    return {
       pricedOrderItem: SecondModelItem.fromGrpc(mainModelPricedItemSourceInfo.pricedOrderItem),
 
       stock: mainModelPricedItemSourceInfo.stock ? Quantity.fromGrpc(mainModelPricedItemSourceInfo.stock) : undefined,
@@ -29,7 +29,7 @@ class MainModelPricedItemSourceInfo extends Model({
       deliveryDurations: mainModelPricedItemSourceInfo.deliveryDurations.map((deliveryDuration: any) =>
         QuantityOriginDuration.fromGrpc(deliveryDuration)
       ),
-    });
+    };
   }
 }
 
