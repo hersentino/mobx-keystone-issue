@@ -42,13 +42,14 @@ export class Todo extends DataModel({
   setText(text: string) {
     this.text = text
   }
-
-  getRefId = () => {
-    return this.id
-  }
 }
 
-export const todoRef = rootRef<ModelData<Todo>>("todoSample/TodoRef", {});
+export const todoRef = rootRef<ModelData<Todo>>("todoSample/TodoRef", {
+  getId(maybeTodo: any) {
+    const ret = maybeTodo.$modelType === undefined ? maybeTodo.id : undefined
+    return ret
+  }
+});
 
 
 @model("todoSample/TodoList")
