@@ -21,7 +21,7 @@ setGlobalConfig({
   modelAutoTypeChecking: ModelAutoTypeCheckingMode.AlwaysOn,
 })
 
-const test  = () => {
+const createId = () => {
   const baseLocalId = nanoid();
   const localId = 0;
   return `${localId.toString(36)}-${baseLocalId}`;
@@ -29,7 +29,7 @@ const test  = () => {
 
 @model("todoSample/Todo")
 export class Todo extends DataModel({
-  id: tProp(types.string, () => test()),
+  id: tProp(types.string, () => createId()),
   text: tProp(types.string), // a required string
   done: tProp(types.boolean, false), // an optional boolean that will default to false
 }) {
