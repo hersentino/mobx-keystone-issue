@@ -78,11 +78,8 @@ export class TodoList extends Model({
 
   @modelAction
   selectTodo(todo: ModelData<Todo>) {
-    console.log("mais nan", this.selectedTodo)
-
     const ref = todoRef(todo);
     this.selectedTodoRef = ref;
-    console.log("mais nan2", this.selectedTodo)
   }
 
   @modelAction
