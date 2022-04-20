@@ -1,56 +1,128 @@
-import React, { useState } from "react";
-import "./App.css";
-import MainModel from "./model/main-model/main-model";
-import getData from "./data";
-import { createRootStore } from "./store";
+import { ModelData } from "mobx-keystone"
+import { observer } from "mobx-react"
+import React, { useState } from "react"
+import { createRootStore, Todo, TodoList } from "./store"
 
-function App() {
-  const [rootStore] = useState(() => createRootStore());
-  const [result1, setResult1] = useState<number>();
-  const [result2, setResult2] = useState<number>();
-  const [result3, setResult3] = useState<number>();
+// we use mobx-react to connect to the data, as it is usual in mobx
+// this library is framework agnostic, so it can work anywhere mobx can work
+// (even outside of a UI)
 
-
+const App = observer(() => {
+  const [rootStore] = useState(() => createRootStore())
 
   return (
-    <div>
-      <button
-        onClick={async () => {
-          const data = await getData();
-
-          const t0 = performance.now();
-          const mainModel = MainModel.fromGrpc(data);
-          const t1 = performance.now();
-          setResult1(t1 - t0);
-
-
-          const t2 = performance.now();
-          rootStore.setMainModel(mainModel);
-          const t3 = performance.now();
-          setResult2(t3 - t2);
-        }}
-      >
-        instance MainModel
-      </button>
-      <button
-        onClick={async () => {
-          const t4 = performance.now();
-          rootStore.setName(String(new Date().getTime()));
-          const t5 = performance.now();
-          setResult3(t5 - t4);
-        }}
-      >
-        set something in store
-      </button>
-
+    <>
+      <TodoListView list={rootStore} />
       <br />
-      <br />
-      <div>time of instanciation : {result1 || "?"} ms</div>
-      <div>time of setting in the store : {result2 || "?"} ms</div>
-      <div>time of change a primitive value in the store : {result3 || "?"} ms</div>
-    </div>
-  );
-}
+    </>
+  )
+})
 
 export default App;
 
+export const TodoListView = observer(({ list }: { list: TodoList}) => {
+  const [newTodo, setNewTodo] = React.useState("")
+
+  const renderTodo = (todo: ModelData<Todo>) => (
+    <TodoView
+      id={todo.id}
+      key={todo.id}
+      done={todo.done}
+      text={todo.text}
+      onClick={() => {
+        todo.done = !todo.done
+      }}
+      onRemove={() => list.remove(todo)}
+      selectTodo={() => list.selectTodo(todo)}
+    />
+  )
+
+  return (
+    <div>
+      <div>
+        {list.selectedTodo !== undefined ? 
+            <>
+              the id of selected todo id : {list.selectedTodo.text}
+            </>
+          :
+            <>no selected todo</>
+        }
+      </div>
+      {list.pending.length > 0 && (
+        <>
+          <h5>TODO</h5>
+          {list.pending.map((t) => renderTodo(t))}
+        </>
+      )}
+
+      {list.done.length > 0 && (
+        <>
+          <h5>DONE</h5>
+          {list.done.map((t) => renderTodo(t))}
+        </>
+      )}
+      <br />
+      <input
+        value={newTodo}
+        onChange={(ev) => {
+          setNewTodo(ev.target.value || "")
+        }}
+        placeholder="I will..."
+      />
+      <button
+        onClick={() => {
+          list.add(new Todo({ text: newTodo }))
+          setNewTodo("")
+        }}
+      >
+        Add todo
+      </button>
+    </div>
+  )
+})
+
+function TodoView({
+  done,
+  text,
+  onClick,
+  onRemove,
+  selectTodo,
+  id,
+}: {
+  done: boolean
+  text: string
+  onClick(): void
+  onRemove(): void
+  selectTodo(): void
+  id: string
+}) {
+  return (
+    <div style={{ cursor: "pointer" }}>
+      <span
+        onClick={onClick}
+        style={{
+          textDecoration: done ? "line-through" : "inherit",
+        }}
+      >
+        <span
+          style={{
+            display: "inline-block",
+            width: "1.5rem",
+            textAlign: "center",
+            marginRight: 8,
+          }}
+        >
+          {done ? "✔️" : "👀"}
+        </span>
+        {text}{" "}
+        {`(${id})`}
+      </span>
+      <span onClick={onRemove} style={{ marginLeft: 16 }}>
+        ❌
+      </span>
+      <span onClick={selectTodo} style={{ marginLeft: 16 }}>
+        select me
+      </span>
+    </div>
+  )
+}

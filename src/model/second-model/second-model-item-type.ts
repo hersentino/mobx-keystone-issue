@@ -1,9 +1,0 @@
-enum SecondModelItemType {
-  ORDER_ITEM_TYPE_GENERIC = 0,
-  ORDER_ITEM_TYPE_ELECTRONIC_COMPONENT = 1,
-  ORDER_ITEM_TYPE_PCB = 2,
-  ORDER_ITEM_TYPE_PCB_ASSEMBLY = 3,
-  UNRECOGNIZED = -1,
-}
-
-export default SecondModelItemType;
