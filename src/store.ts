@@ -46,8 +46,7 @@ export class Todo extends DataModel({
 
 export const todoRef = rootRef<ModelData<Todo>>("todoSample/TodoRef", {
   getId(maybeTodo: any) {
-    const ret = maybeTodo.$modelType === undefined ? maybeTodo.id : undefined
-    return ret
+    return maybeTodo.$modelType === undefined && maybeTodo.id !== undefined ? maybeTodo.id : undefined
   }
 });
 
@@ -69,7 +68,7 @@ export class TodoList extends Model({
 
   get selectedTodo() {
     const selectedTodoValue = this.selectedTodoRef
-    return selectedTodoValue ? selectedTodoValue.current : undefined;
+    return selectedTodoValue ? selectedTodoValue.maybeCurrent : undefined;
   }
 
   @modelAction
