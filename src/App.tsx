@@ -30,7 +30,7 @@ export const TodoListView = observer(({ list }: { list: TodoList}) => {
       done={todo.done}
       text={todo.text}
       onClick={() => {
-        todo.done = !todo.done
+        // todo.done = !todo.done
       }}
       onRemove={() => list.remove(todo)}
       selectTodo={() => list.selectTodo(todo)}
